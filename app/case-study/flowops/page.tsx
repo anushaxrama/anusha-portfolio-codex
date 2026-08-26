@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
+import CaseStudyCover from '@/components/CaseStudyCover'
 
 interface Particle {
   id: number;
@@ -84,7 +85,7 @@ export default function FlowOpsCaseStudy() {
   }
 
   return (
-    <main className="relative min-h-screen bg-black text-white">
+    <main className="case-study-vibe case-study-flowops relative min-h-screen bg-black text-white">
       {/* Floating particles - Red accent - Hidden on mobile for performance */}
       <div className="hidden md:block fixed inset-0 pointer-events-none overflow-hidden z-0">
         {particles.map((particle) => (
@@ -106,8 +107,17 @@ export default function FlowOpsCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
+      <CaseStudyCover
+        title="FlowOps"
+        eyebrow="B2B workflow system"
+        description="Enterprise requests, approvals, roles, and messy internal ops made readable enough for real teams."
+        image="/flowops1.png"
+        accent="orange"
+        tags={['clean handoffs', 'role clarity', 'less waiting']}
+      />
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -1816,7 +1826,12 @@ function Section({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
       { threshold: 0.1, rootMargin: '-50px' }
     )
     const currentRef = ref.current

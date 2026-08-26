@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
+import CaseStudyCover from '@/components/CaseStudyCover'
 
 interface Particle {
   id: number;
@@ -85,7 +86,7 @@ export default function NeuranNoteCaseStudy() {
   }
 
   return (
-    <main className="relative min-h-screen bg-black text-white">
+    <main className="case-study-vibe case-study-neuranote relative min-h-screen bg-black text-white">
       {/* Floating particles */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {particles.map((particle) => (
@@ -106,8 +107,17 @@ export default function NeuranNoteCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
+      <CaseStudyCover
+        title="NeuraNote"
+        eyebrow="AI learning system"
+        description="A soft study space for memory, review, and turning scattered notes into something that feels easy to return to."
+        image="/neuranote/neuranote-1.png"
+        accent="pink"
+        tags={['study rituals', 'memory maps', 'gentle review']}
+      />
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -256,7 +266,7 @@ export default function NeuranNoteCaseStudy() {
           
           {/* Problem Statement Box */}
           <div 
-            className="relative rounded-3xl p-10 md:p-14"
+            className="case-problem-card relative rounded-3xl p-10 md:p-14"
             style={{
               background: 'linear-gradient(145deg, rgba(255,255,255,0.06) 0%, rgba(255,255,255,0.02) 100%)',
               boxShadow: `
@@ -1693,7 +1703,7 @@ export default function NeuranNoteCaseStudy() {
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div>
               <h3 className="text-[#a78bfa] font-medium mb-3">What I Learned</h3>
-              <ul className="space-y-2 text-white/60 text-sm">
+              <ul className="reflection-list space-y-2 text-white/60 text-sm">
             <li>Designing for cognition, not just usability</li>
                 <li>Positioning AI as collaborator, not authority</li>
                 <li>Prioritizing learning over engagement metrics</li>
@@ -1701,7 +1711,7 @@ export default function NeuranNoteCaseStudy() {
             </div>
             <div>
               <h3 className="text-[#a78bfa] font-medium mb-3">Challenges</h3>
-              <ul className="space-y-2 text-white/60 text-sm">
+              <ul className="reflection-list space-y-2 text-white/60 text-sm">
                 <li>Balancing simplicity with powerful features</li>
                 <li>Measuring learning retention in prototypes</li>
                 <li>Advocating for user-first decisions</li>
@@ -1709,7 +1719,7 @@ export default function NeuranNoteCaseStudy() {
             </div>
             <div>
               <h3 className="text-[#a78bfa] font-medium mb-3">Next Time</h3>
-              <ul className="space-y-2 text-white/60 text-sm">
+              <ul className="reflection-list space-y-2 text-white/60 text-sm">
                 <li>Test with real content earlier</li>
                 <li>Include more diverse learners</li>
                 <li>Build accessibility in from day one</li>
@@ -1886,6 +1896,7 @@ function Section({ children }: { children: React.ReactNode }) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true)
+          observer.disconnect()
         }
       },
       { threshold: 0.05, rootMargin: '0px' }
@@ -1979,4 +1990,3 @@ function Feature({ title, description }: { title: string; description: string })
     </div>
   )
 }
-

@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
+import CaseStudyCover from '@/components/CaseStudyCover'
 
 interface Particle {
   id: number;
@@ -60,7 +61,7 @@ export default function HabitatCaseStudy() {
   }, [])
 
   return (
-    <main className="relative min-h-screen bg-black text-white">
+    <main className="case-study-vibe case-study-habitat relative min-h-screen bg-black text-white">
       {/* Floating particles - Orange accent */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {particles.map((particle) => (
@@ -82,8 +83,17 @@ export default function HabitatCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
+      <CaseStudyCover
+        title="HABITat"
+        eyebrow="Mobile behavior design"
+        description="A habit app that treats consistency like a little world you get to grow, not a chore you have to survive."
+        image="/habitat/habitat-hero.png"
+        accent="green"
+        tags={['tiny rewards', 'habit loops', 'growing world']}
+      />
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -956,7 +966,12 @@ function Section({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const observer = new IntersectionObserver(
-      ([entry]) => { if (entry.isIntersecting) setIsVisible(true) },
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true)
+          observer.disconnect()
+        }
+      },
       { threshold: 0.1, rootMargin: '-50px' }
     )
     const currentRef = ref.current

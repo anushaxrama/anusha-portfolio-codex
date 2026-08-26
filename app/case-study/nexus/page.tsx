@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
+import CaseStudyCover from '@/components/CaseStudyCover'
 
 interface Particle {
   id: number;
@@ -88,7 +89,7 @@ export default function NexusCaseStudy() {
   }
 
   return (
-    <main className="nexus-theme relative min-h-screen bg-[#f7f7f2] text-slate-900">
+    <main className="case-study-vibe case-study-nexus nexus-theme relative min-h-screen bg-[#f7f7f2] text-slate-900">
       {/* Floating particles */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {particles.map((particle) => (
@@ -109,8 +110,17 @@ export default function NexusCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
+      <CaseStudyCover
+        title="Nexus"
+        eyebrow="AI research platform"
+        description="A clearer way to ask once, compare multiple AI models, and leave with one answer you can actually trust."
+        image="/narbl/narbl-1.png"
+        accent="blue"
+        tags={['multi-model clarity', 'student trust', 'less tab chaos']}
+      />
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -2414,6 +2424,7 @@ function Section({ children, id }: { children: React.ReactNode; id?: string }) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true)
+          observer.disconnect()
         }
       },
       { threshold: 0.05, rootMargin: '0px' }

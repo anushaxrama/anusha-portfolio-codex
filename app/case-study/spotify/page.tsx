@@ -4,6 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
+import CaseStudyCover from '@/components/CaseStudyCover'
 
 interface Particle {
   id: number;
@@ -23,6 +24,11 @@ const demoImages = [
   { src: '/spotify/spotify-5.png', label: 'Thread Detail' },
   { src: '/spotify/spotify-6.png', label: 'Now Playing Memory' },
 ]
+
+const researchSessions = Array.from({ length: 6 }, (_, index) => ({
+  src: `/spotify/research/session-${index + 1}.mp4`,
+  label: `Session ${String(index + 1).padStart(2, '0')}`,
+}))
 
 export default function SpotifyCaseStudy() {
   const [isLoaded, setIsLoaded] = useState(false)
@@ -86,7 +92,7 @@ export default function SpotifyCaseStudy() {
   }
 
   return (
-    <main className="relative min-h-screen bg-black text-white">
+    <main className="case-study-vibe case-study-spotify relative min-h-screen bg-black text-white">
       {/* Floating particles - Spotify green */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {particles.map((particle) => (
@@ -108,8 +114,17 @@ export default function SpotifyCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
+      <CaseStudyCover
+        title="Spotify Threads"
+        eyebrow="Music memory concept"
+        description="A concept for rediscovering songs by mood, memory, and the little stories attached to what you play."
+        image="/spotify/spotify-1.png"
+        accent="mint"
+        tags={['listening memory', 'mood discovery', 'music with context']}
+      />
+
       {/* Hero Section */}
-      <section className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -382,6 +397,36 @@ export default function SpotifyCaseStudy() {
           <p className="text-lg text-white/60 leading-relaxed">
             I wanted to understand how people actually feel about their relationship with music streaming. Not just what features they want, but <strong className="text-white/80">how streaming has changed the way they listen, remember, and connect</strong> with music.
           </p>
+        </div>
+
+        <div className="mb-20">
+          <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <h3 className="text-xl md:text-2xl font-semibold text-[#1db954]">Research Sessions</h3>
+              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/45">
+                Six conversations helped surface the habits, memories, and frustrations behind everyday listening.
+              </p>
+            </div>
+            <p className="text-xs uppercase tracking-[0.2em] text-white/30">Recorded interviews</p>
+          </div>
+
+          <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {researchSessions.map((session) => (
+              <figure key={session.src} className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-2">
+                <video
+                  className="aspect-[16/9] w-full rounded-xl bg-[#101010] object-cover"
+                  src={session.src}
+                  controls
+                  playsInline
+                  preload="metadata"
+                />
+                <figcaption className="flex items-center justify-between px-2 pb-1 pt-3 text-xs">
+                  <span className="font-medium text-white/70">{session.label}</span>
+                  <span className="text-white/30">Spotify Threads</span>
+                </figcaption>
+              </figure>
+            ))}
+          </div>
         </div>
 
         {/* User Surveys */}
@@ -1741,6 +1786,7 @@ function Section({ children }: { children: React.ReactNode }) {
       ([entry]) => {
         if (entry.isIntersecting) {
           setIsVisible(true)
+          observer.disconnect()
         }
       },
       { threshold: 0.1, rootMargin: '-50px' }
