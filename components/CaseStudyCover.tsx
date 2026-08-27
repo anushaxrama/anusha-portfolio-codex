@@ -29,22 +29,19 @@ export default function CaseStudyCover({
           <a href="#case-study-detail">Read the case study</a>
         </div>
 
-        <div className="case-cover-art" aria-label={`${title} visual preview`}>
-          <div className="case-cover-flower" aria-hidden="true">
-            <i /><i /><i /><i /><i />
-            <strong />
-          </div>
-          <div className="case-cover-tab tab-one">
+        <div
+          className="case-cover-art"
+          aria-label={`${title} visual preview`}
+          data-topics={tags.join(' · ')}
+        >
+          <div className="case-cover-orbit case-cover-orbit-one" aria-hidden="true"><i /></div>
+          <div className="case-cover-orbit case-cover-orbit-two" aria-hidden="true"><i /></div>
+          <div className="case-cover-orbit case-cover-orbit-three" aria-hidden="true"><i /></div>
+          <div className="case-cover-image-frame">
             <Image src={image} alt={`${title} interface preview`} fill sizes="(max-width: 900px) 70vw, 420px" />
           </div>
-          <div className="case-cover-tab tab-two">
-            <span>{tags[0]}</span>
-          </div>
-          <div className="case-cover-tab tab-three">
-            <span>{tags[1]}</span>
-          </div>
-          <div className="case-cover-note">
-            <small>{tags[2]}</small>
+          <div className="case-cover-dot-cluster" aria-hidden="true">
+            <i /><i /><i />
           </div>
         </div>
       </div>

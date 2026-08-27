@@ -1,44 +1,36 @@
 import Link from 'next/link'
+import Image from 'next/image'
 
-type VisualPlaceholderProps = {
-  number: string
-  title: string
-  note: string
-}
-
-function VisualPlaceholder({ number, title, note }: VisualPlaceholderProps) {
-  return (
-    <div className="crusoe-visual-placeholder toni-visual-placeholder">
-      <span>{number}</span>
-      <div>
-        <strong>{title}</strong>
-        <small>{note}</small>
-      </div>
-      <i aria-hidden="true" />
-    </div>
-  )
-}
-
-const websiteSurfaces = [
-  'A redesigned landing page with a clearer explanation of the product and its value',
-  'A pricing experience structured around the Starter PR Kit and Founder Plan',
-  'A blog hub with search, filters, and discovery chips for easier content exploration',
-  'Customer stories, founder spotlights, and examples that made the output feel tangible',
+const journey = [
+  ['Discover', 'Can this solve my visibility problem?', 'Lead with a concrete content-kit outcome.'],
+  ['Commit', 'Is this worth my time and money?', 'Make scope, pricing, and proof easy to compare.'],
+  ['Prepare', 'What will I need to do?', 'Set expectations before camera and microphone access.'],
+  ['Interview', 'Am I answering this well?', 'Use one clear prompt, progress, and calm feedback.'],
+  ['Publish', 'What can I use right now?', 'Organize one conversation into channel-ready outputs.'],
 ]
 
 const interviewPrinciples = [
-  ['Direction', 'Start with the founder’s goal so Toni can shape the conversation around the right outcome.'],
-  ['Warmth', 'Make the AI host feel prepared and encouraging, without becoming distracting or overly human.'],
-  ['Momentum', 'Keep users oriented through questions, progress, recording states, and the next action.'],
-  ['Flexibility', 'Support different user roles, stories, and content needs without making setup feel heavy.'],
+  ['Intent first', 'Start with the outcome the user needs—trust, a launch, leads, hiring, or consistent visibility.'],
+  ['Lower the stakes', 'Explain that the session is short, conversational, and does not require prepared copy.'],
+  ['One moment at a time', 'Keep the current prompt and response state dominant so the interface never competes with the conversation.'],
+  ['Visible momentum', 'Pair progress, recording feedback, and completion cues so users always know what is happening next.'],
 ]
 
-const contentOutputs = [
-  ['LinkedIn posts', 'Ready-to-refine thought leadership pulled from the founder’s own answers.'],
-  ['Blog ideas + articles', 'Longer-form angles that turn interview themes into useful narratives.'],
-  ['Press quotes', 'Concise, credible lines designed for media and external communications.'],
-  ['Founder stories', 'A structured origin, mission, and point of view in the founder’s voice.'],
-  ['PR kits', 'A practical collection of reusable assets, organized for publishing and sharing.'],
+const outputs = [
+  ['Narrative', 'A coherent story arc that preserves the interviewee’s context and point of view.'],
+  ['Video clips', 'Short, focused moments with enough framing to work outside the full interview.'],
+  ['LinkedIn', 'Thought-leadership posts shaped for professional discovery and discussion.'],
+  ['Social', 'X threads and Instagram copy adapted from the same source material.'],
+  ['Article', 'Long-form structure that develops the strongest themes instead of simply transcribing.'],
+  ['Quotes', 'Concise, credible pull quotes ready for press, websites, and media kits.'],
+]
+
+const processSteps = [
+  ['Frame', 'Defined the promise and the questions a founder needs answered at each stage.'],
+  ['Map', 'Connected marketing, account entry, interview, generation, and publishing in one service journey.'],
+  ['Prototype', 'Explored hierarchy, conversation pacing, Toni’s states, and output organization.'],
+  ['Align', 'Used flows and annotated screens to make product logic, copy, and edge states reviewable.'],
+  ['Refine', 'Tightened responsive behavior and visual consistency across public and signed-in surfaces.'],
 ]
 
 export default function ToniPRCaseStudy() {
@@ -46,114 +38,186 @@ export default function ToniPRCaseStudy() {
     <main className="crusoe-case toni-case">
       <nav className="crusoe-case-nav" aria-label="Case study navigation">
         <Link href="/#work">← Back to work</Link>
-        <span>ToniPR · UI/UX Design Internship</span>
+        <span>ToniPR · End-to-end product design</span>
         <a href="mailto:arama@ucdavis.edu">Let&apos;s talk</a>
       </nav>
 
-      <header className="crusoe-case-hero">
+      <header className="crusoe-case-hero toni-case-hero">
         <div className="toni-spark spark-one" aria-hidden="true" />
         <div className="toni-spark spark-two" aria-hidden="true" />
         <div className="crusoe-hero-copy">
           <p className="crusoe-eyebrow">UI/UX Design Internship · March–May 2026</p>
-          <h1>From one conversation to a full content kit.</h1>
+          <h1>One conversation. A complete content system.</h1>
           <p className="crusoe-lede">
-            At ToniPR, a product by TunePact, I helped design the end-to-end experience for founders to complete a guided
-            AI interview and turn their answers into useful PR and marketing content.
+            I designed ToniPR across the full customer journey—from the public website and pricing to authentication,
+            onboarding, the AI interview, dashboard, and generated content experience.
           </p>
         </div>
 
         <div className="crusoe-hero-meta">
-          <div><span>Role</span><strong>UI/UX Design Intern</strong></div>
+          <div><span>Role</span><strong>End-to-end product designer</strong></div>
           <div><span>Timeline</span><strong>March–May 2026</strong></div>
           <div><span>Product</span><strong>ToniPR by TunePact</strong></div>
-          <div><span>Focus</span><strong>Web, onboarding, AI interview, content</strong></div>
+          <div><span>Scope</span><strong>Brand web, product UX, AI interaction</strong></div>
         </div>
 
-        <figure className="toni-walkthrough">
-          <video
-            src="/tonipr/tonipr-site-walkthrough.mp4"
-            poster="/tonipr/site-hero.jpg"
-            aria-label="ToniPR website and product story walkthrough"
-            autoPlay
-            loop
-            muted
-            playsInline
-            preload="metadata"
-          />
-          <figcaption>
-            <span>Live product walkthrough</span>
-            <small>Landing page, positioning, process, content outputs, and customer proof</small>
-          </figcaption>
-        </figure>
       </header>
 
-      <section className="crusoe-impact-band" aria-label="ToniPR experience summary">
-        <div><strong>01</strong><span>Connected founder journey</span></div>
-        <div><strong>05+</strong><span>Core product surfaces designed</span></div>
-        <div><strong>01</strong><span>Interview-to-content system</span></div>
+      <section className="crusoe-impact-band" aria-label="ToniPR project summary">
+        <div><strong>01</strong><span>Connected journey from discovery to publishing</span></div>
+        <div><strong>08</strong><span>Public and signed-in surface families</span></div>
+        <div><strong>01→06</strong><span>Interview transformed into reusable content formats</span></div>
       </section>
 
-      <section className="crusoe-case-section intro-section">
-        <div className="crusoe-section-label"><span>Overview</span><strong>The product in one line</strong></div>
+      <section className="crusoe-case-section intro-section toni-overview">
+        <div className="crusoe-section-label"><span>Overview</span><strong>The design challenge</strong></div>
         <div className="crusoe-intro-grid">
-          <h2>Help busy founders sound like themselves, more consistently.</h2>
+          <h2>Make professional visibility feel achievable in ten minutes.</h2>
           <div>
             <p>
-              ToniPR is an interview-led content product for founders, consultants, and small teams. Users choose a goal,
-              talk with Toni for a few minutes, and receive content shaped from what they actually said.
+              Founders and consultants already have useful expertise, but turning it into consistent content usually
+              means writing time, agency cost, or another complex AI workflow. ToniPR reframes that work as a short,
+              guided conversation.
             </p>
             <p>
-              My work connected the promise on the marketing site to the reality inside the product: discover the value,
-              choose a plan, get oriented, complete the interview, and understand what to do with the generated content.
+              The core design problem was larger than an interview screen: every touchpoint had to build enough clarity
+              and trust for someone to speak naturally, then understand how their words became content they could use.
             </p>
           </div>
         </div>
+        <div className="toni-thesis-band">
+          <span>Design thesis</span>
+          <p>The AI should feel like a prepared interviewer; the user should remain the author.</p>
+        </div>
       </section>
 
-      <section className="crusoe-case-section project-section toni-lilac-section">
-        <div className="crusoe-section-label"><span>Part 01</span><strong>Positioning + discovery</strong></div>
+      <section className="crusoe-case-section project-section toni-lilac-section" id="service-framing">
+        <div className="crusoe-section-label"><span>01</span><strong>Service framing</strong></div>
         <div className="crusoe-project-heading">
-          <h2>Make the value feel real before asking founders to start.</h2>
+          <h2>I started with the journey, not the dashboard.</h2>
           <p>
-            I redesigned the landing experience, refined navigation and information hierarchy, structured pricing, and
-            built supporting content surfaces so visitors could quickly understand what ToniPR creates and who it is for.
+            I mapped the questions a user carries from the first landing-page visit through the moment they publish.
+            This kept the public site and signed-in product aligned around one promise instead of feeling like separate experiences.
           </p>
         </div>
 
-        <div className="crusoe-visual-pair">
-          <VisualPlaceholder number="01A" title="Landing page redesign" note="Add desktop and mobile hero, how-it-works, and example-output screens" />
-          <VisualPlaceholder number="01B" title="Pricing + plans" note="Add Starter PR Kit and Founder Plan explorations" />
+        <div className="toni-journey" aria-label="ToniPR end-to-end user journey">
+          {journey.map(([stage, question, response], index) => (
+            <article key={stage}>
+              <span>0{index + 1}</span>
+              <h3>{stage}</h3>
+              <p className="toni-journey-question">{question}</p>
+              <p>{response}</p>
+            </article>
+          ))}
         </div>
 
-        <div className="crusoe-output-grid">
-          <h3>A clearer product story across the site.</h3>
-          <ul>
-            {websiteSurfaces.map((surface) => <li key={surface}>{surface}</li>)}
-          </ul>
+        <figure className="toni-screen toni-screen-wide toni-screen-hero-crop">
+          <Image src="/tonipr/case-study/public-hero.png" alt="ToniPR landing page hero communicating the content-kit promise" width={1440} height={900} sizes="(max-width: 900px) 100vw, 1376px" />
+          <figcaption><strong>Start with the outcome</strong><span>The first screen explains what one short conversation produces before introducing features.</span></figcaption>
+        </figure>
+      </section>
+
+      <section className="crusoe-case-section project-section toni-paper-section" id="product-story">
+        <div className="crusoe-section-label"><span>02</span><strong>Product story + acquisition</strong></div>
+        <div className="crusoe-project-heading">
+          <h2>Explain an unfamiliar AI workflow without making it feel technical.</h2>
+          <p>
+            The marketing experience follows the same mental model as the product: choose a goal, talk naturally, and
+            receive a kit. Proof appears before purchase through a real interview and visible output formats.
+          </p>
         </div>
 
-        <div className="crusoe-showcase-grid">
-          <VisualPlaceholder number="01C" title="Blog + discovery hub" note="Add search, filters, topic chips, and article-card states" />
-          <div className="crusoe-quote-block">
-            <span>Experience principle</span>
-            <blockquote>Show the outcome early. Let the product explain itself through useful examples.</blockquote>
+        <figure className="toni-screen toni-screen-wide toni-screen-soft toni-screen-process-crop">
+          <Image src="/tonipr/case-study/how-it-works.png" alt="ToniPR three-step how-it-works experience" width={1440} height={900} sizes="(max-width: 900px) 100vw, 1376px" />
+          <figcaption><strong>Progressive disclosure</strong><span>Three concrete steps replace technical explanations of recording, AI processing, and generation.</span></figcaption>
+        </figure>
+
+        <div className="toni-story-principles">
+          <article><span>01 · Promise</span><h3>Name the deliverable.</h3><p>“Content kit” gives the experience a memorable container and makes the output feel finite.</p></article>
+          <article><span>02 · Effort</span><h3>Make the ask specific.</h3><p>“5–10 minutes” helps users decide whether they are ready before entering the flow.</p></article>
+          <article><span>03 · Proof</span><h3>Show the transformation.</h3><p>A real interview beside its results demonstrates where the AI output came from.</p></article>
+        </div>
+
+        <div className="toni-surface-gallery">
+          <figure className="toni-screen">
+            <Image src="/tonipr/case-study/pricing.png" alt="ToniPR pricing page with single-kit and membership plans" width={1440} height={900} sizes="(max-width: 900px) 100vw, 33vw" />
+            <figcaption><strong>Pricing</strong><span>Compare one-time and ongoing visibility without changing the product model.</span></figcaption>
+          </figure>
+          <figure className="toni-screen">
+            <Image src="/tonipr/case-study/blog.png" alt="ToniPR blog and customer-story discovery page" width={1440} height={900} sizes="(max-width: 900px) 100vw, 33vw" />
+            <figcaption><strong>Editorial discovery</strong><span>Separate learning content from customer proof while keeping both easy to browse.</span></figcaption>
+          </figure>
+          <figure className="toni-screen">
+            <Image src="/tonipr/case-study/guides.png" alt="ToniPR searchable guides page" width={1440} height={900} sizes="(max-width: 900px) 100vw, 33vw" />
+            <figcaption><strong>Guides</strong><span>A scalable help surface with search and format filters prepared for future content.</span></figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <section className="crusoe-case-section project-section toni-peach-section" id="interview-design">
+        <div className="crusoe-section-label"><span>03</span><strong>Onboarding + conversation design</strong></div>
+        <div className="crusoe-project-heading">
+          <h2>The interview had to feel guided, not scripted.</h2>
+          <p>
+            The signed-in journey carries the same language and visual tone into account entry, goal selection,
+            preparation, and the live session. The system provides structure without taking attention away from the person speaking.
+          </p>
+        </div>
+
+        <div className="toni-auth-layout">
+          <figure className="toni-screen toni-auth-screen">
+            <Image src="/tonipr/case-study/login-entry.png" alt="ToniPR authentication screen with Toni character and concise product reminder" width={1440} height={900} sizes="(max-width: 900px) 100vw, 62vw" />
+            <figcaption><strong>Account entry</strong><span>Authentication still reinforces the product promise instead of becoming a generic utility screen.</span></figcaption>
+          </figure>
+          <div className="toni-auth-copy">
+            <p className="crusoe-eyebrow">Continuity across the handoff</p>
+            <h3>Keep the reason for signing up visible.</h3>
+            <p>
+              The split layout pairs a focused form with Toni and one concise benefit statement. That balance maintains
+              personality while keeping the task, validation, and recovery paths straightforward.
+            </p>
+            <div className="toni-state-row" aria-label="Toni interview states">
+              <span>Ready</span><i aria-hidden="true">→</i><span>Listening</span><i aria-hidden="true">→</i><span>Thinking</span><i aria-hidden="true">→</i><span>Complete</span>
+            </div>
           </div>
         </div>
-      </section>
 
-      <section className="crusoe-case-section project-section toni-peach-section">
-        <div className="crusoe-section-label"><span>Part 02</span><strong>Onboarding + AI interview</strong></div>
-        <div className="crusoe-project-heading">
-          <h2>Design an AI interview that feels guided, not scripted.</h2>
-          <p>
-            I designed the onboarding flow and the live interview experience with Toni as the host. The work included
-            login and credits-plan screens, user roles, interview-question structure, progress states, and character motion explorations.
-          </p>
+        <div className="toni-product-flow-heading">
+          <span>Signed-in product flow</span>
+          <div>
+            <h3>Personalize the kit before asking users to record.</h3>
+            <p>
+              The dashboard makes the value of an interview visible immediately. A six-step setup then narrows the goal,
+              point of view, voice, and recording conditions so the session feels prepared without requiring users to write a brief.
+            </p>
+          </div>
         </div>
 
-        <VisualPlaceholder number="02A" title="End-to-end onboarding flow" note="Add entry, goal selection, role setup, login, credits, and interview preparation screens" />
+        <div className="toni-signed-in-gallery">
+          <figure className="toni-screen toni-dashboard-screen">
+            <Image src="/tonipr/case-study/product-dashboard.png" alt="ToniPR signed-in dashboard showing interview credits, output formats, and the start interview action" width={2940} height={1428} sizes="(max-width: 900px) 100vw, 1376px" />
+            <figcaption><strong>01 · Orient</strong><span>Lead with the next action while previewing every deliverable the interview unlocks.</span></figcaption>
+          </figure>
 
-        <div className="crusoe-findings-grid">
+          <div className="toni-signed-in-pair">
+            <figure className="toni-screen toni-modal-screen">
+              <Image src="/tonipr/case-study/interview-focus.png" alt="ToniPR interview setup asking the user to select a focus for the content" width={2940} height={1428} sizes="(max-width: 900px) 100vw, 50vw" />
+              <figcaption><strong>02 · Focus</strong><span>Turn a broad credibility goal into a useful interview direction.</span></figcaption>
+            </figure>
+            <figure className="toni-screen toni-modal-screen">
+              <Image src="/tonipr/case-study/interview-tone.png" alt="ToniPR interview setup asking the user to select a content voice" width={2940} height={1428} sizes="(max-width: 900px) 100vw, 50vw" />
+              <figcaption><strong>03 · Voice</strong><span>Let users select recognizable qualities instead of describing a tone from scratch.</span></figcaption>
+            </figure>
+          </div>
+
+          <figure className="toni-screen toni-camera-screen">
+            <Image src="/tonipr/case-study/camera-setup.png" alt="ToniPR camera and microphone preparation screen with a clip-safe framing guide" width={2940} height={1428} sizes="(max-width: 900px) 100vw, 1376px" />
+            <figcaption><strong>04 · Prepare</strong><span>The camera preview explains the vertical clip-safe zone and checks audio before the live interview begins.</span></figcaption>
+          </figure>
+        </div>
+
+        <div className="crusoe-findings-grid toni-interview-principles">
           {interviewPrinciples.map(([title, body], index) => (
             <article key={title}>
               <span>0{index + 1}</span>
@@ -163,31 +227,50 @@ export default function ToniPRCaseStudy() {
           ))}
         </div>
 
-        <div className="crusoe-flow-comparison">
+        <div className="toni-edge-strip">
+          <span>Conversation edge states</span>
           <div>
-            <p className="crusoe-eyebrow">Toni as host</p>
-            <h3>A character with a job to do.</h3>
-            <p>
-              Toni needed to add warmth and continuity while keeping the founder&apos;s story at the center. I explored motion
-              and response states that communicated listening, thinking, prompting, and completion without creating visual noise.
-            </p>
+            <p><strong>Permission denied</strong> Explain why access matters and give a direct retry path.</p>
+            <p><strong>Connection interrupted</strong> Preserve progress and make recovery feel safe.</p>
+            <p><strong>Answer needs depth</strong> Use an encouraging follow-up instead of an error state.</p>
+            <p><strong>Generation takes time</strong> Show active progress and set a clear expectation.</p>
           </div>
-          <VisualPlaceholder number="02B" title="AI interview + Toni motion" note="Add interview states, question patterns, recording UI, and character animation frames" />
         </div>
       </section>
 
-      <section className="crusoe-case-section project-section toni-mint-section">
-        <div className="crusoe-section-label"><span>Part 03</span><strong>Dashboard + generated content</strong></div>
+      <section className="crusoe-case-section project-section toni-mint-section" id="content-system">
+        <div className="crusoe-section-label"><span>04</span><strong>Content-kit architecture</strong></div>
         <div className="crusoe-project-heading">
-          <h2>Turn a finished interview into content people can actually use.</h2>
+          <h2>One source of truth, shaped for every channel.</h2>
           <p>
-            I designed the main dashboard and the presentation of generated PR outputs, focusing on hierarchy, scanning,
-            trust, and an easy path from reviewing an idea to editing, copying, or publishing it.
+            The content experience does more than list generated copy. It preserves the relationship between the original
+            answer, the larger story, and each publishable format so users can review the work with confidence.
           </p>
         </div>
 
+        <div className="toni-transformation-grid">
+          <figure className="toni-screen">
+            <Image src="/tonipr/case-study/demo-overview.png" alt="ToniPR real interview session displayed beside generated output tabs" width={1440} height={900} sizes="(max-width: 900px) 100vw, 50vw" />
+            <figcaption><strong>Source + result</strong><span>The original conversation and its outputs share one visual frame.</span></figcaption>
+          </figure>
+          <figure className="toni-screen">
+            <Image src="/tonipr/case-study/content-kit.png" alt="ToniPR interview clip displayed beside generated narrative content" width={1440} height={900} sizes="(max-width: 900px) 100vw, 50vw" />
+            <figcaption><strong>Traceable generation</strong><span>Users can connect a specific interview moment to structured long-form content.</span></figcaption>
+          </figure>
+        </div>
+
+        <div className="toni-content-pipeline" aria-label="Content transformation model">
+          <div><span>01 · Source</span><strong>Interview answers</strong><p>Voice, expertise, examples, and language from the user.</p></div>
+          <i aria-hidden="true">→</i>
+          <div><span>02 · Structure</span><strong>Story arc</strong><p>Themes organized into a clear narrative with supporting evidence.</p></div>
+          <i aria-hidden="true">→</i>
+          <div><span>03 · Adapt</span><strong>Channel formats</strong><p>Length, framing, and tone shaped for where the content will live.</p></div>
+          <i aria-hidden="true">→</i>
+          <div><span>04 · Act</span><strong>Review + publish</strong><p>A usable next step instead of a wall of generated text.</p></div>
+        </div>
+
         <div className="toni-output-list">
-          {contentOutputs.map(([title, body], index) => (
+          {outputs.map(([title, body], index) => (
             <article key={title}>
               <span>0{index + 1}</span>
               <h3>{title}</h3>
@@ -195,40 +278,81 @@ export default function ToniPRCaseStudy() {
             </article>
           ))}
         </div>
-
-        <div className="crusoe-visual-pair billing-visuals">
-          <VisualPlaceholder number="03A" title="Main dashboard" note="Add content-kit overview, project status, credits, and next actions" />
-          <VisualPlaceholder number="03B" title="Generated content detail" note="Add LinkedIn, article, quote, founder-story, or PR-kit presentation screens" />
-        </div>
       </section>
 
-      <section className="crusoe-case-section collaboration-section">
-        <div className="crusoe-section-label"><span>System view</span><strong>One connected journey</strong></div>
+      <section className="crusoe-case-section collaboration-section toni-collaboration-section" id="collaboration">
+        <div className="crusoe-section-label"><span>05</span><strong>Ownership + collaboration</strong></div>
         <div className="crusoe-collaboration-grid">
           <div>
-            <h2>Discover. Interview. Shape. Share.</h2>
+            <h2>Designing the system meant working across its seams.</h2>
             <p>
-              The internship tied together acquisition, account setup, conversation design, AI feedback, dashboard structure,
-              and content presentation. Each surface had to feel distinct while still belonging to one calm, credible system.
+              I owned the visual and interaction design across the public website and authenticated product. I used one
+              shared journey to align product behavior, content, brand expression, and implementation details as the experience evolved.
             </p>
+            <div className="toni-ownership-list" aria-label="ToniPR design ownership">
+              <span>Marketing + pricing</span><span>Authentication + onboarding</span><span>AI interview</span><span>Dashboard</span><span>Generated content</span><span>Responsive system</span>
+            </div>
           </div>
-          <VisualPlaceholder number="04" title="Full experience map" note="Add the complete journey from landing page through published content" />
+
+          <div className="crusoe-collaboration-artifact toni-process-artifact">
+            <header><span>Working loop</span><small>From ambiguity to shipped behavior</small></header>
+            <ol>
+              {processSteps.map(([title, body], index) => (
+                <li key={title}>
+                  <span>0{index + 1}</span>
+                  <div>
+                    <div className="crusoe-collaboration-step-heading"><h3>{title}</h3></div>
+                    <p>{body}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
+            <footer>Shared journey → clearer decisions → more coherent product</footer>
+          </div>
         </div>
       </section>
 
       <section className="crusoe-case-section reflection-section">
         <p className="crusoe-eyebrow">Reflection</p>
-        <h2>What this project sharpened.</h2>
+        <h2>What the project sharpened.</h2>
         <div className="crusoe-reflection-grid">
-          <article><span>01</span><p>AI experiences feel more trustworthy when users can see how their own input shaped the result.</p></article>
-          <article><span>02</span><p>A character can create warmth, but clarity and pacing still have to carry the interaction.</p></article>
-          <article><span>03</span><p>Great onboarding begins before sign-up, with a product story that makes the outcome easy to picture.</p></article>
+          <article><span>01</span><p>Trust grows when people can see how their own input shaped the AI result.</p></article>
+          <article><span>02</span><p>A character adds warmth, but pacing and feedback make the conversation usable.</p></article>
+          <article><span>03</span><p>The strongest onboarding begins before sign-up, with a promise the product can keep.</p></article>
         </div>
       </section>
 
+      <section className="crusoe-case-section project-section toni-final-product" id="final-product">
+        <div className="crusoe-section-label"><span>06</span><strong>Final shipped product</strong></div>
+        <div className="crusoe-project-heading">
+          <h2>The complete experience, from first impression to finished content.</h2>
+          <p>
+            After refining each part of the journey, the shipped product connects the public website, account entry,
+            interview preparation, live session, and generated content in one coherent system.
+          </p>
+        </div>
+
+        <figure className="toni-walkthrough toni-final-walkthrough">
+          <video
+            src="/tonipr/tonipr-centered-walkthrough.mp4"
+            poster="/tonipr/case-study/public-hero.png"
+            aria-label="Cursor-free walkthrough of the final shipped ToniPR experience"
+            autoPlay
+            loop
+            muted
+            playsInline
+            preload="metadata"
+          />
+          <figcaption>
+            <span>Final shipped product</span>
+            <small>Cursor-free walkthrough · public website, signed-in product, interview setup, and content system</small>
+          </figcaption>
+        </figure>
+      </section>
+
       <footer className="crusoe-case-footer">
-        <p>ToniPR · UI/UX Design Internship</p>
-        <h2>One conversation, many ways to show up.</h2>
+        <p>ToniPR · End-to-end product design</p>
+        <h2>From expertise to something ready to share.</h2>
         <div>
           <Link href="/#work">More work</Link>
           <a href="mailto:arama@ucdavis.edu">Get in touch</a>

@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type Project = {
   title: string
@@ -28,6 +28,7 @@ type ShowcaseSlide = {
   alt: string
   format: 'portrait' | 'square' | 'landscape'
   image?: string
+  secondaryImage?: string
   video?: string
   position?: string
   fit?: 'cover' | 'contain'
@@ -35,6 +36,8 @@ type ShowcaseSlide = {
   presentation?: 'full' | 'inset'
   framing?: 'roomy' | 'tight'
   motion?: 'afterglow'
+  composition?: 'two-phone' | 'frameless'
+  playbackRate?: number
 }
 
 const projects: Project[] = [
@@ -135,7 +138,7 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     title: 'ToniPR · Product walkthrough',
     href: '/case-study/tonipr',
-    video: '/tonipr/tonipr-showcase.mp4',
+    video: '/tonipr/tonipr-centered-walkthrough.mp4',
     alt: 'ToniPR marketing experience and product story walkthrough',
     format: 'landscape',
     tone: 'rose',
@@ -145,11 +148,13 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     title: 'NeuraNote · Product reel',
     href: '/case-study/neuranote',
-    video: '/neuranote/neuranote-showcase-reel.mp4',
+    video: '/neuranote/neuranote-showcase-borderless-wide.mp4',
     alt: 'NeuraNote hero, dashboard, concept map, review, and insights experience',
     format: 'landscape',
     tone: 'lilac',
     presentation: 'inset',
+    composition: 'frameless',
+    framing: 'tight',
   },
   {
     title: 'Visual study · Afterglow',
@@ -157,7 +162,7 @@ const showcaseSlides: ShowcaseSlide[] = [
     image: '/images/inspiration/cosmic-figures.jpg',
     alt: 'Dreamlike cosmic artwork with three glowing figures',
     format: 'portrait',
-    fit: 'cover',
+    fit: 'contain',
     position: 'center',
     tone: 'ink',
     presentation: 'full',
@@ -176,12 +181,14 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     title: 'Spotify Threads',
     href: '/case-study/spotify',
-    video: '/spotify/spotify-product-reel.mp4',
-    alt: 'Spotify Threads product interface walkthrough',
-    format: 'portrait',
+    image: '/spotify/spotify-1.png',
+    secondaryImage: '/spotify/spotify-2.png',
+    alt: 'Spotify Threads shown in two transparent phone frames',
+    format: 'landscape',
     tone: 'mint',
     presentation: 'inset',
     framing: 'tight',
+    composition: 'two-phone',
   },
   {
     title: 'Interface study · Table for one',
@@ -189,7 +196,7 @@ const showcaseSlides: ShowcaseSlide[] = [
     image: '/images/inspiration/food-app-concept.jpg',
     alt: 'Colorful restaurant and food delivery mobile interface concept',
     format: 'portrait',
-    fit: 'cover',
+    fit: 'contain',
     position: 'center',
     tone: 'citrus',
     presentation: 'full',
@@ -207,15 +214,77 @@ const showcaseSlides: ShowcaseSlide[] = [
   {
     title: 'HABITat',
     href: '/case-study/habitat',
-    video: '/habitat/habitat-demo.mp4',
-    alt: 'HABITat mobile app walkthrough',
+    image: '/habitat/habitat-hero.png',
+    alt: 'HABITat mobile app shown in transparent phone frames',
     format: 'landscape',
+    fit: 'contain',
     tone: 'mint',
     presentation: 'inset',
   },
 ]
 
 const loopedShowcaseSlides = [...showcaseSlides, ...showcaseSlides]
+
+const spotifyPhonePairs = [
+  {
+    angled: { src: '/spotify/spotify-1.png', width: 708, height: 1392 },
+    upright: { src: '/spotify/spotify-2.png', width: 694, height: 1382 },
+  },
+  {
+    angled: { src: '/spotify/spotify-4.png', width: 704, height: 1390 },
+    upright: { src: '/spotify/spotify-3.png', width: 712, height: 1386 },
+  },
+  {
+    angled: { src: '/spotify/spotify-5.png', width: 726, height: 1396 },
+    upright: { src: '/spotify/spotify-6.png', width: 714, height: 1398 },
+  },
+]
+
+function SpotifyPhonePair({ alt }: { alt: string }) {
+  const [activePair, setActivePair] = useState(0)
+
+  useEffect(() => {
+    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
+    if (motionPreference.matches) return
+
+    const interval = window.setInterval(() => {
+      setActivePair((current) => (current + 1) % spotifyPhonePairs.length)
+    }, 7000)
+
+    return () => window.clearInterval(interval)
+  }, [])
+
+  return (
+    <span className="showcase-static-phone-pair" role="img" aria-label={alt}>
+      {spotifyPhonePairs.flatMap((pair, pairIndex) => {
+        const isActive = pairIndex === activePair
+
+        return [
+          <Image
+            key={`${pair.angled.src}-angled`}
+            className={`showcase-static-phone showcase-static-phone-angled showcase-phone-frame${isActive ? ' is-active' : ''}`}
+            src={pair.angled.src}
+            alt=""
+            aria-hidden="true"
+            width={pair.angled.width}
+            height={pair.angled.height}
+            sizes="180px"
+          />,
+          <Image
+            key={`${pair.upright.src}-upright`}
+            className={`showcase-static-phone showcase-static-phone-upright showcase-phone-frame${isActive ? ' is-active' : ''}`}
+            src={pair.upright.src}
+            alt=""
+            aria-hidden="true"
+            width={pair.upright.width}
+            height={pair.upright.height}
+            sizes="180px"
+          />,
+        ]
+      })}
+    </span>
+  )
+}
 
 const supportTabs = [
   { image: '/tonipr/site-hero.jpg', alt: 'ToniPR storytelling platform', tone: 'tab-pink' },
@@ -351,12 +420,14 @@ export default function HousePortfolio() {
               return (
                 <article
                   key={`${slide.title}-${index}`}
-                  className={`home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.motion ? ` showcase-motion-${slide.motion}` : ''}`}
+                  className={`home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.motion ? ` showcase-motion-${slide.motion}` : ''}${slide.composition ? ` showcase-${slide.composition}` : ''}`}
                   aria-hidden={isDuplicate}
                   aria-label={slide.title}
                 >
                   <span className="showcase-media">
-                    {slide.video ? (
+                    {slide.composition === 'two-phone' && slide.image && slide.secondaryImage ? (
+                      <SpotifyPhonePair alt={slide.alt} />
+                    ) : slide.video ? (
                       <video
                         src={slide.video}
                         aria-label={slide.alt}
@@ -365,6 +436,9 @@ export default function HousePortfolio() {
                         muted
                         playsInline
                         preload="auto"
+                        onLoadedMetadata={(event) => {
+                          event.currentTarget.playbackRate = slide.playbackRate ?? 1
+                        }}
                       />
                     ) : slide.image ? (
                       <Image
