@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
-import CaseStudyCover from '@/components/CaseStudyCover'
+import EditorialCaseStudyCover from '@/components/EditorialCaseStudyCover'
 
 interface Particle {
   id: number;
@@ -110,17 +110,21 @@ export default function NexusCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
-      <CaseStudyCover
-        title="Nexus"
-        eyebrow="AI research platform"
-        description="A clearer way to ask once, compare multiple AI models, and leave with one answer you can actually trust."
-        image="/narbl/narbl-1.png"
+      <EditorialCaseStudyCover
         accent="blue"
-        tags={['multi-model clarity', 'student trust', 'less tab chaos']}
+        eyebrow="Nexus · Multi-model research platform"
+        headline="One question. Multiple models. A clearer answer."
+        description="I designed an AI research experience that compares multiple model responses behind the scenes and gives students one focused answer they can understand, verify, and act on."
+        meta={[
+          ['Role', 'Product Designer'],
+          ['Timeline', '10 weeks'],
+          ['Research', '48 college students'],
+          ['Scope', 'Research, product UX, and visual system'],
+        ]}
       />
 
       {/* Hero Section */}
-      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" hidden aria-hidden="true" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -2416,41 +2420,10 @@ export default function NexusCaseStudy() {
 }
 
 function Section({ children, id }: { children: React.ReactNode; id?: string }) {
-  const ref = useRef<HTMLElement>(null)
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true)
-          observer.disconnect()
-        }
-      },
-      { threshold: 0.05, rootMargin: '0px' }
-    )
-
-    const el = ref.current
-    if (el) {
-      observer.observe(el)
-    }
-
-    return () => {
-      if (el) {
-        observer.unobserve(el)
-      }
-    }
-  }, [])
-
   return (
-    <section 
-      ref={ref}
+    <section
       id={id}
-      className={`relative z-10 border-t border-slate-200/80 px-4 py-16 transition-all duration-700 ease-out md:px-8 md:py-24 ${id ? 'scroll-mt-24' : ''} ${
-        isVisible 
-          ? 'opacity-100 translate-y-0' 
-          : 'opacity-0 translate-y-8'
-      }`}
+      className={`legacy-case-section relative z-10 border-t border-slate-200/80 px-4 py-16 md:px-8 md:py-24 ${id ? 'scroll-mt-24' : ''}`}
     >
       <div className="max-w-6xl mx-auto">
         {children}
@@ -2472,12 +2445,12 @@ function Footnote({ id, children }: { id: number; children: string }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="mb-4 text-sm font-mono text-[#2563EB]/70">{children}</p>
+    <p className="legacy-section-number mb-4 text-sm font-mono text-[#2563EB]/70">{children}</p>
   )
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="mb-12 text-3xl font-bold text-[#2563EB] md:text-4xl">{children}</h2>
+    <h2 className="legacy-section-title mb-12 text-3xl font-bold text-[#2563EB] md:text-4xl">{children}</h2>
   )
 }

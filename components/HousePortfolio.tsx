@@ -3,6 +3,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useRef, useState } from 'react'
+import ViewportVideo from '@/components/ViewportVideo'
 
 type Project = {
   title: string
@@ -11,6 +12,7 @@ type Project = {
   href: string
   image: string
   alt: string
+  previewVideo?: string
   secondaryImage?: string
   secondaryAlt: string
   tone: string
@@ -36,7 +38,7 @@ type ShowcaseSlide = {
   presentation?: 'full' | 'inset'
   framing?: 'roomy' | 'tight'
   motion?: 'afterglow'
-  composition?: 'two-phone' | 'frameless'
+  composition?: 'frameless'
   playbackRate?: number
 }
 
@@ -113,7 +115,6 @@ const projects: Project[] = [
     href: '/case-study/habitat',
     image: '/habitat/habitat-hero.png',
     alt: 'HABITat app preview',
-    secondaryImage: '/habitat/home-screen.jpeg',
     secondaryAlt: 'HABITat home dashboard',
     tone: 'green',
     stat: 'Habit loops',
@@ -125,8 +126,8 @@ const projects: Project[] = [
     description: 'A Spotify concept for listening memory, mood-based discovery, and intentional rediscovery.',
     href: '/case-study/spotify',
     image: '/spotify/spotify-1.png',
-    alt: 'Spotify Threads preview',
-    secondaryImage: '/spotify/spotify-2.png',
+    alt: 'Spotify Threads single-phone prototype',
+    previewVideo: '/spotify/spotify-phone-prototype.webm',
     secondaryAlt: 'Spotify Threads listening memory screen',
     tone: 'mint',
     stat: 'Music memory',
@@ -179,18 +180,6 @@ const showcaseSlides: ShowcaseSlide[] = [
     framing: 'tight',
   },
   {
-    title: 'Spotify Threads',
-    href: '/case-study/spotify',
-    image: '/spotify/spotify-1.png',
-    secondaryImage: '/spotify/spotify-2.png',
-    alt: 'Spotify Threads shown in two transparent phone frames',
-    format: 'landscape',
-    tone: 'mint',
-    presentation: 'inset',
-    framing: 'tight',
-    composition: 'two-phone',
-  },
-  {
     title: 'Interface study · Table for one',
     href: '/garden',
     image: '/images/inspiration/food-app-concept.jpg',
@@ -200,16 +189,6 @@ const showcaseSlides: ShowcaseSlide[] = [
     position: 'center',
     tone: 'citrus',
     presentation: 'full',
-  },
-  {
-    title: 'Crusoe · Managed Logs',
-    href: '/case-study/crusoe',
-    video: '/crusoe/empty-state-managed-logs.mp4',
-    alt: 'Crusoe Console Managed Logs empty state walkthrough',
-    format: 'landscape',
-    tone: 'sage',
-    presentation: 'inset',
-    framing: 'tight',
   },
   {
     title: 'HABITat',
@@ -224,67 +203,6 @@ const showcaseSlides: ShowcaseSlide[] = [
 ]
 
 const loopedShowcaseSlides = [...showcaseSlides, ...showcaseSlides]
-
-const spotifyPhonePairs = [
-  {
-    angled: { src: '/spotify/spotify-1.png', width: 708, height: 1392 },
-    upright: { src: '/spotify/spotify-2.png', width: 694, height: 1382 },
-  },
-  {
-    angled: { src: '/spotify/spotify-4.png', width: 704, height: 1390 },
-    upright: { src: '/spotify/spotify-3.png', width: 712, height: 1386 },
-  },
-  {
-    angled: { src: '/spotify/spotify-5.png', width: 726, height: 1396 },
-    upright: { src: '/spotify/spotify-6.png', width: 714, height: 1398 },
-  },
-]
-
-function SpotifyPhonePair({ alt }: { alt: string }) {
-  const [activePair, setActivePair] = useState(0)
-
-  useEffect(() => {
-    const motionPreference = window.matchMedia('(prefers-reduced-motion: reduce)')
-    if (motionPreference.matches) return
-
-    const interval = window.setInterval(() => {
-      setActivePair((current) => (current + 1) % spotifyPhonePairs.length)
-    }, 7000)
-
-    return () => window.clearInterval(interval)
-  }, [])
-
-  return (
-    <span className="showcase-static-phone-pair" role="img" aria-label={alt}>
-      {spotifyPhonePairs.flatMap((pair, pairIndex) => {
-        const isActive = pairIndex === activePair
-
-        return [
-          <Image
-            key={`${pair.angled.src}-angled`}
-            className={`showcase-static-phone showcase-static-phone-angled showcase-phone-frame${isActive ? ' is-active' : ''}`}
-            src={pair.angled.src}
-            alt=""
-            aria-hidden="true"
-            width={pair.angled.width}
-            height={pair.angled.height}
-            sizes="180px"
-          />,
-          <Image
-            key={`${pair.upright.src}-upright`}
-            className={`showcase-static-phone showcase-static-phone-upright showcase-phone-frame${isActive ? ' is-active' : ''}`}
-            src={pair.upright.src}
-            alt=""
-            aria-hidden="true"
-            width={pair.upright.width}
-            height={pair.upright.height}
-            sizes="180px"
-          />,
-        ]
-      })}
-    </span>
-  )
-}
 
 const supportTabs = [
   { image: '/tonipr/site-hero.jpg', alt: 'ToniPR storytelling platform', tone: 'tab-pink' },
@@ -306,6 +224,12 @@ const supportColumns = [
 export default function HousePortfolio() {
   const workStripRef = useRef<HTMLDivElement>(null)
   const workTrackRef = useRef<HTMLDivElement>(null)
+  const [heroFlowersReady, setHeroFlowersReady] = useState(false)
+
+  useEffect(() => {
+    const readyTimer = window.setTimeout(() => setHeroFlowersReady(true), 1250)
+    return () => window.clearTimeout(readyTimer)
+  }, [])
 
   useEffect(() => {
     const strip = workStripRef.current
@@ -318,7 +242,10 @@ export default function HousePortfolio() {
     let frame = 0
     let lastTime = now()
     let offset = 0
-    const speed = 41
+    const normalSpeed = 44
+    const hoverSpeed = 24
+    let speed = normalSpeed
+    let targetSpeed = normalSpeed
     let loopWidth = 0
     const scheduleFrame = typeof window.requestAnimationFrame === 'function'
       ? (callback: FrameRequestCallback) => window.requestAnimationFrame(callback)
@@ -340,6 +267,14 @@ export default function HousePortfolio() {
       lastTime = now()
     }
 
+    const handlePointerEnter = () => {
+      targetSpeed = hoverSpeed
+    }
+
+    const handlePointerLeave = () => {
+      targetSpeed = normalSpeed
+    }
+
     measureLoop()
     const resizeObserver = typeof ResizeObserver === 'function'
       ? new ResizeObserver(measureLoop)
@@ -347,10 +282,13 @@ export default function HousePortfolio() {
     resizeObserver?.observe(track)
     window.addEventListener('resize', measureLoop, { passive: true })
     document.addEventListener('visibilitychange', handleVisibilityChange)
+    strip.addEventListener('pointerenter', handlePointerEnter)
+    strip.addEventListener('pointerleave', handlePointerLeave)
 
     const move = (time: number) => {
       const elapsed = Math.min((time - lastTime) / 1000, 0.05)
       lastTime = time
+      speed += (targetSpeed - speed) * Math.min(1, elapsed * 7)
       if (loopWidth > 0) {
         offset = (offset + speed * elapsed) % loopWidth
         track.style.transform = `translate3d(${-offset}px, 0, 0)`
@@ -365,26 +303,40 @@ export default function HousePortfolio() {
       resizeObserver?.disconnect()
       window.removeEventListener('resize', measureLoop)
       document.removeEventListener('visibilitychange', handleVisibilityChange)
+      strip.removeEventListener('pointerenter', handlePointerEnter)
+      strip.removeEventListener('pointerleave', handlePointerLeave)
     }
   }, [])
 
   return (
     <main className="dani-page min-h-screen">
       <div className="dani-hero-shell">
-        <nav className="dani-nav">
-          <a href="#work">works</a>
-          <span className="dani-nav-spacer" aria-hidden="true" />
-          <Link href="/garden">garden</Link>
+        <nav className="dani-nav" aria-label="Primary navigation">
+          <div className="dani-nav-menu">
+            <a href="#work" className="is-current">Works</a>
+            <Link href="/about">About me</Link>
+            <a
+              href="/Anusha_Ramachandran_Resume.pdf"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Résumé
+            </a>
+          </div>
         </nav>
 
         <section className="dani-hero">
-          <div className="hero-flower flower-blue" aria-hidden="true">
-            <span /><span /><span /><span /><span /><span />
-            <strong />
+          <div className={`hero-flower flower-blue${heroFlowersReady ? ' is-ready' : ''}`} aria-hidden="true">
+            <div className="hero-flower-shape">
+              <span /><span /><span /><span /><span /><span />
+              <strong />
+            </div>
           </div>
-          <div className="hero-flower flower-red" aria-hidden="true">
-            <span /><span /><span /><span /><span /><span />
-            <strong />
+          <div className={`hero-flower flower-red${heroFlowersReady ? ' is-ready' : ''}`} aria-hidden="true">
+            <div className="hero-flower-shape">
+              <span /><span /><span /><span /><span /><span />
+              <strong />
+            </div>
           </div>
           <div className="dani-hero-copy">
             <div className="hero-doodle" aria-hidden="true">
@@ -392,10 +344,14 @@ export default function HousePortfolio() {
             </div>
             <p className="dani-kicker">Hi, I’m Anusha</p>
             <h1>
-              Creating meaningful experiences for the digital world
+              <span>Visual and Product</span>
+              <span>designer bringing ideas</span>
+              <span>from concept to launch.</span>
             </h1>
             <p className="dani-hero-text">
-              I bring clarity, care, and personality to every interaction.
+              I work across research, visual design, interaction, and front-end implementation—
+              turning complex ideas and messy workflows into polished digital products people can
+              understand, trust, and use.
             </p>
             <div className="dani-hero-actions">
               <a href="mailto:arama@ucdavis.edu" className="dani-button primary">Chat with me</a>
@@ -425,9 +381,7 @@ export default function HousePortfolio() {
                   aria-label={slide.title}
                 >
                   <span className="showcase-media">
-                    {slide.composition === 'two-phone' && slide.image && slide.secondaryImage ? (
-                      <SpotifyPhonePair alt={slide.alt} />
-                    ) : slide.video ? (
+                    {slide.video ? (
                       <video
                         src={slide.video}
                         aria-label={slide.alt}
@@ -487,19 +441,37 @@ export default function HousePortfolio() {
                     <strong />
                   </div>
                 </div>
-                <div className="case-blank-tile" />
+                <div className="case-blank-tile">
+                  <div className="case-mini-flower case-mini-flower-inverse">
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <span />
+                    <strong />
+                  </div>
+                </div>
               </div>
               <div className="case-feature-card">
                 <div className="case-preview">
                   <div className="case-pattern" />
-                  <div className="case-image main-shot">
-                    <Image
-                      src={project.image}
-                      alt={project.alt}
-                      fill
-                      sizes="(max-width: 900px) 72vw, 780px"
-                      className="case-media-contain"
-                    />
+                  <div className={`case-image main-shot${project.previewVideo ? ' single-phone-shot' : ''}`}>
+                    {project.previewVideo ? (
+                      <ViewportVideo
+                        sources={[{ src: project.previewVideo, type: 'video/webm' }]}
+                        poster={project.image}
+                        ariaLabel={project.alt}
+                        className="single-phone-preview-video"
+                      />
+                    ) : (
+                      <Image
+                        src={project.image}
+                        alt={project.alt}
+                        fill
+                        sizes="(max-width: 900px) 72vw, 780px"
+                        className="case-media-contain"
+                      />
+                    )}
                   </div>
                   {project.secondaryImage && (
                     <div className="case-image mini-shot">
@@ -535,7 +507,7 @@ export default function HousePortfolio() {
       <section className="dani-support">
         <div className="support-heading">
           <h2>I’ve got your back with...</h2>
-          <p>Digital aesthetics that engage and emotionally connect with your users</p>
+          <p className="home-single-line">Digital aesthetics that engage and emotionally connect with your users</p>
         </div>
 
         <div className="support-tab-stage">
@@ -563,7 +535,7 @@ export default function HousePortfolio() {
       <section className="behind-pixels">
         <div className="behind-heading">
           <h2>A little about me</h2>
-          <p>The perspective and small things that shape my work.</p>
+          <p className="home-single-line">The perspective and small things that shape my work.</p>
         </div>
 
         <div className="pixel-story first">
@@ -635,7 +607,6 @@ export default function HousePortfolio() {
         </a>
         <div className="footer-link-row" aria-label="Footer links">
           <a href="#work">works</a>
-          <Link href="/garden">garden</Link>
           <a href="mailto:arama@ucdavis.edu">email</a>
           <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">linkedIn</a>
         </div>

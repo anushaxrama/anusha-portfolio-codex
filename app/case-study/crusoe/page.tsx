@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useState, type KeyboardEvent } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 type VisualPlaceholderProps = {
   number: string
@@ -24,16 +24,68 @@ function VisualPlaceholder({ number, title, note, format = 'wide' }: VisualPlace
   )
 }
 
-function CrusoeAuditArtifact() {
-  const currentScreens = [
-    ['Instance templates', '/images/crusoe/current-instances-empty.png', 809, 376],
-    ['Orchestration', '/images/crusoe/current-orchestration-empty.png', 1117, 421],
-    ['Observability', '/images/crusoe/current-observability-empty.png', 1119, 466],
-    ['Security', '/images/crusoe/current-security-empty.png', 1258, 431],
-    ['Clusters', '/images/crusoe/current-cluster-empty.png', 1389, 348],
-    ['Missing prerequisite', '/images/crusoe/current-modal-empty.png', 583, 369],
-  ] as const
+type CostMotionFigureProps = {
+  src: string
+  poster: string
+  label: string
+  title: string
+  description: string
+}
 
+function CostMotionFigure({ src, poster, label, title, description }: CostMotionFigureProps) {
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const mediaRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const video = videoRef.current
+    const media = mediaRef.current
+    if (!video || !media || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
+
+    let isVisible = false
+    const syncPlayback = () => {
+      if (isVisible) void video.play().catch(() => undefined)
+      else video.pause()
+    }
+
+    const observer = new IntersectionObserver(([entry]) => {
+      isVisible = entry.intersectionRatio >= 0.95
+      syncPlayback()
+    }, { threshold: [0, 0.95] })
+
+    video.addEventListener('canplay', syncPlayback)
+    observer.observe(media)
+    return () => {
+      video.removeEventListener('canplay', syncPlayback)
+      observer.disconnect()
+    }
+  }, [])
+
+  return (
+    <figure className="crusoe-cost-figure crusoe-cost-figure-wide crusoe-cost-motion-figure">
+      <div ref={mediaRef} className="crusoe-cost-media">
+        <video ref={videoRef} muted loop playsInline preload="metadata" poster={poster} aria-label={`${title} interaction walkthrough`}>
+          <source src={src} type="video/mp4" />
+        </video>
+      </div>
+      <figcaption>
+        <span>{label}</span>
+        <strong>{title}</strong>
+        <p>{description}</p>
+      </figcaption>
+    </figure>
+  )
+}
+
+const currentEmptyStateScreens = [
+  { label: 'Instance templates', src: '/images/crusoe/current-instances-empty.png', width: 809, height: 376 },
+  { label: 'Slurm clusters', src: '/images/crusoe/current-orchestration-empty.png', width: 1117, height: 421 },
+  { label: 'Buckets', src: '/images/crusoe/current-observability-empty.png', width: 1119, height: 466 },
+  { label: 'Kubernetes clusters', src: '/images/crusoe/current-security-empty.png', width: 1258, height: 431 },
+  { label: 'Disks', src: '/images/crusoe/current-cluster-empty.png', width: 1389, height: 348 },
+  { label: 'Missing prerequisite', src: '/images/crusoe/current-modal-empty.png', width: 583, height: 369 },
+] as const
+
+function CrusoeAuditArtifact() {
   const figJamArtifacts = [
     {
       number: '01',
@@ -124,7 +176,7 @@ function CrusoeAuditArtifact() {
       </div>
 
       <div className="crusoe-current-state-gallery" aria-label="Current Crusoe Console empty-state inventory">
-        {currentScreens.map(([label, src, width, height]) => (
+        {currentEmptyStateScreens.map(({ label, src, width, height }) => (
           <figure key={src}>
             <Image src={src} alt={`${label} empty-state audit screen`} width={width} height={height} sizes="(max-width: 700px) 78vw, 36vw" />
             <figcaption>{label}</figcaption>
@@ -275,11 +327,18 @@ const emptyStateOutputs = [
   'Future-state onboarding concepts for prerequisites, CLI actions, and suggested configurations',
 ]
 
+const projectTimeline = [
+  ['01', 'Understand', 'Audit the Console, map first-time journeys, and study comparable cloud products.'],
+  ['02', 'Frame', 'Connect recurring friction to user needs, technical constraints, and product priorities.'],
+  ['03', 'Design', 'Explore interaction patterns, test near-term and future directions, and refine the system in critique.'],
+  ['04', 'Align + hand off', 'Partner with engineering, product, brand, and writing to prepare implementation-ready work.'],
+] as const
+
 const emptyStateScope = [
   ['12', 'surfaces audited'],
   ['6', 'interface patterns'],
-  ['2', 'release horizons'],
-  ['5', 'partner disciplines'],
+  ['2', 'versions planned'],
+  ['5', 'partner teams'],
 ] as const
 
 const emptyStateWork = [
@@ -322,10 +381,10 @@ const emptyStateWork = [
 ] as const
 
 const emptyStateRules = [
-  ['Name the moment', 'Say what is empty in language that matches the product—not a generic “nothing here.”'],
-  ['Explain the consequence', 'Give only the context a user needs to understand why the state exists and what happens next.'],
-  ['Prioritize one move', 'Lead with a single useful action; keep documentation available without competing with it.'],
-  ['Design the transition', 'Account for prerequisites, provisioning, failure, and recovery instead of stopping at the pristine first screen.'],
+  ['Say what is missing', 'Name the specific resource or data instead of using a generic “nothing here” message.'],
+  ['Explain why it matters', 'Give users only the context they need to understand the screen and the next step.'],
+  ['Lead with one action', 'Make the best next step obvious and keep documentation available as a secondary option.'],
+  ['Cover what happens next', 'Design for requirements, progress, failure, and recovery instead of stopping at the first empty screen.'],
 ] as const
 
 const versionComparison = [
@@ -366,16 +425,16 @@ const emptyStatePartners = [
 ] as const
 
 const cleanAuditFindings = [
-  ['Inconsistent orientation', 'Some empty pages explained the resource; others relied on prior infrastructure knowledge.'],
-  ['Dead-end first runs', 'A visible create action did not always explain prerequisites, sequence, or what would happen next.'],
-  ['One state carrying too much', 'Empty, blocked, provisioning, error, and recovery moments were not treated as distinct product states.'],
+  ['Uneven guidance', 'Some empty pages explained the product. Others assumed users already understood the infrastructure.'],
+  ['Create buttons without context', 'Users could start an action without knowing what they needed first or what would happen next.'],
+  ['Different states looked the same', 'Empty, blocked, loading, error, and recovery moments often used the same message.'],
 ] as const
 
 const competitiveAnalysis = [
-  ['Orientation', 'How peer cloud products introduce an unfamiliar resource.', 'Use a product-specific title and one concise explanation instead of a generic “no data” message.'],
-  ['Starting point', 'Whether users receive only a create button or a meaningful default path.', 'Keep one primary action in V1; introduce recommended configurations and templates in V2.'],
-  ['Technical support', 'How documentation, CLI paths, and prerequisites appear in context.', 'Keep documentation secondary but visible, and surface prerequisites before users hit a dead end.'],
-  ['Lifecycle feedback', 'How the experience responds after a user starts an action.', 'Carry the empty state through provisioning, failure, retry, and ready states with persistent banners.'],
+  ['Explain the product', 'How other cloud tools introduce an unfamiliar resource.', 'Use a specific title and one short explanation instead of a generic “no data” message.'],
+  ['Recommend a first step', 'Whether users see only a create button or receive a useful starting point.', 'Lead with one action now; add recommended setups in a later release.'],
+  ['Show help in context', 'Where other products place documentation, command-line steps, and prerequisites.', 'Keep documentation visible and explain requirements before users reach a dead end.'],
+  ['Explain what happens next', 'How the interface responds after a user starts an action.', 'Use banners to show progress, failure, retry, and readiness after creation begins.'],
 ] as const
 
 const futureBannerCases = [
@@ -386,67 +445,229 @@ const futureBannerCases = [
 ] as const
 
 const collaborationPhases = [
-  ['Align the release', 'Design critique and product partnership separated a focused V1 from the more ambitious onboarding layer.'],
-  ['Validate the behavior', 'Engineering reviewed available product states, prerequisites, actions, and implementation constraints.'],
-  ['Make it feel native', 'Brand and technical writing refined illustration, terminology, guidance, and documentation paths.'],
+  ['Choose what to ship first', 'Design and product helped separate a focused first release from ideas that needed more time.'],
+  ['Check what was buildable', 'Engineering confirmed which states, actions, and requirements the Console could support.'],
+  ['Make it feel like Crusoe', 'Brand and technical writing refined the illustrations, terms, instructions, and help links.'],
 ] as const
 
 const heuristicScope = [
   ['3', 'critical journeys'],
-  ['10', 'Nielsen heuristics'],
-  ['3', 'cognitive-science lenses'],
-  ['1', 'prioritized backlog'],
+  ['10', 'usability principles'],
+  ['9', 'major improvements shipped'],
+  ['End-to-end', 'review through QA'],
 ] as const
 
 const heuristicMethod = [
-  ['01', 'Walk the journey', 'Followed each task from entry point to completion, including navigation changes, prerequisites, errors, and handoffs to documentation.'],
-  ['02', 'Evaluate behavior', 'Mapped observed friction to Nielsen’s principles and the cognitive mechanism behind it—not personal preference.'],
-  ['03', 'Rate the consequence', 'Separated cosmetic issues from moments that blocked setup, obscured context, or increased the chance of an infrastructure mistake.'],
+  ['01', 'Follow the complete task', 'Walked through each journey from the first click to completion, including requirements, errors, and help documentation.'],
+  ['02', 'Explain each problem', 'Recorded what happened, why it broke a usability principle, how it affected users, and how serious it was.'],
+  ['03', 'Turn findings into fixes', 'Wrote the highest-priority changes as Jira tickets, defined edge cases, and stayed through implementation and QA.'],
 ] as const
 
 const heuristicJourneys = [
   {
+    id: 'cost-monitoring',
     number: '01',
-    title: 'Find API access',
-    focus: 'Discoverability',
-    goal: 'Locate the place to create and manage API credentials.',
-    friction: 'Security and API access lived behind an unexpected account path. Users had to know where to look before the interface could help them.',
-    heuristics: [
-      ['H2', 'Match between system and the real world'],
-      ['H6', 'Recognition rather than recall'],
-      ['H7', 'Flexibility and efficiency of use'],
-    ],
-    response: 'Surface “API Keys” in account navigation and add a direct profile-menu shortcut instead of making users repeat a three-menu path.',
-    result: 'The destination uses the language users search for and is reachable in one step.',
-  },
-  {
-    number: '02',
-    title: 'Create an API key',
-    focus: 'Setup + validation',
-    goal: 'Create the right credential in the right account context without an avoidable failure.',
-    friction: 'The flow mixed “secret,” “access,” and “API key” language, made scope changes easy to miss, and waited until submission to reveal preventable errors.',
+    title: 'Cost monitoring',
+    focus: 'Attribution + control',
+    goal: 'Understand a change in spend, trace it to the responsible usage, and decide what to do next.',
+    path: ['See spend change', 'Trace the driver', 'Take action'],
+    friction: 'Billing showed totals without explaining what caused them. Users lost their project and date filters as they moved between screens, then had to compare cost and infrastructure activity by hand.',
     heuristics: [
       ['H1', 'Visibility of system status'],
-      ['H4', 'Consistency and standards'],
-      ['H5', 'Error prevention'],
-      ['H9', 'Recognize, diagnose, and recover from errors'],
+      ['H2', 'Match between system and the real world'],
+      ['H6', 'Recognition rather than recall'],
+      ['H8', 'Aesthetic and minimalist design'],
     ],
-    response: 'Keep account context visible, use “API key” consistently, disable Create until required fields are complete, and show progress plus field-specific recovery guidance.',
-    result: 'Users can confirm scope before acting, avoid incomplete submissions, and understand what is happening after Create.',
+    shipped: [
+      'Reorganized billing from overview to breakdown to resource-level detail.',
+      'Kept the billing period and organizational scope visible throughout an investigation.',
+      'Connected spend changes to the infrastructure activity behind them and surfaced the next useful action.',
+    ],
+    jira: 'Cost hierarchy · scope controls · usage attribution',
+    result: 'Users can trace a bill increase to the project and activity behind it without rebuilding the search across separate tools.',
   },
   {
-    number: '03',
-    title: 'Connect the CLI',
-    focus: 'Handoff + next step',
-    goal: 'Use the new credential to continue setup outside the creation flow.',
-    friction: 'Credential creation ended without a clear continuation. Users had to leave the Console, find separate documentation, and translate terminology between the two surfaces.',
+    id: 'api-keys',
+    number: '02',
+    title: 'API keys',
+    focus: 'Access + setup',
+    goal: 'Find, create, and use an API key in the correct account context.',
+    path: ['Find API keys', 'Create securely', 'Continue setup'],
+    friction: 'API keys were hard to find, the product used several names for the same thing, and the creation flow did not clearly explain what to do after making a key.',
     heuristics: [
+      ['H2', 'Match between system and the real world'],
       ['H4', 'Consistency and standards'],
+      ['H5', 'Error prevention'],
       ['H6', 'Recognition rather than recall'],
       ['H10', 'Help and documentation'],
     ],
-    response: 'Add an inline “Next: Set up the CLI” action, preserve account context, and align Console and documentation terminology around one task-specific path.',
-    result: 'Success leads directly to the next useful action instead of becoming another search task.',
+    shipped: [
+      'Moved “API Keys” into expected account navigation and added a repeat-user shortcut.',
+      'Kept account context visible and standardized terminology across the Console and documentation.',
+      'Added validation and creation feedback, then connected the new credential directly to CLI setup.',
+    ],
+    jira: 'Navigation · credential validation · setup handoff',
+    result: 'A safer setup flow that is easier to find and guides users through the key’s first use.',
+  },
+  {
+    id: 'monitoring-debugging',
+    number: '03',
+    title: 'Monitoring + debugging',
+    focus: 'Diagnosis + recovery',
+    goal: 'Move from a resource issue to the right metrics and logs, identify the cause, and recover.',
+    path: ['Notice an issue', 'Inspect signals', 'Resolve the cause'],
+    friction: 'Health, metrics, and logs lived on separate screens. Moving between them could reset the selected resource and time range, while blank states did not explain whether there was no data or something had failed.',
+    heuristics: [
+      ['H1', 'Visibility of system status'],
+      ['H4', 'Consistency and standards'],
+      ['H6', 'Recognition rather than recall'],
+      ['H9', 'Recognize, diagnose, and recover from errors'],
+    ],
+    shipped: [
+      'Created a direct route from an affected resource to its relevant metrics and logs.',
+      'Preserved the resource, time range, and filters as users moved between signals.',
+      'Separated loading, no-data, and error states and gave each state a specific recovery action.',
+    ],
+    jira: 'Observability routing · context persistence · state handling',
+    result: 'Users can move from a resource problem to the right evidence and next action with less backtracking.',
+  },
+] as const
+
+const apiKeyFigmaArtifacts = [
+  {
+    number: '01',
+    title: 'Finding the API-key path',
+    description: 'The evaluated path, violated heuristics, observed behavior, and recommendation in one decision-ready frame.',
+    src: '/images/crusoe/figma/api-finding.png',
+    width: 1440,
+    height: 900,
+    featured: true,
+  },
+  {
+    number: '02',
+    title: 'First-key onboarding',
+    description: 'A proposed Console banner that makes the prerequisite visible at the moment users need it.',
+    src: '/images/crusoe/figma/api-onboarding-banner.png',
+    width: 1500,
+    height: 1100,
+    featured: false,
+  },
+  {
+    number: '03',
+    title: 'Secure credential export',
+    description: 'A longer-term MFA-gated download state that handles the risk and recovery details around key creation.',
+    src: '/images/crusoe/figma/api-secure-export.png',
+    width: 1060,
+    height: 800,
+    featured: false,
+  },
+] as const
+
+const apiSecureCreationSteps = [
+  {
+    label: 'Before · Current behavior',
+    title: 'The easiest option was also the riskiest.',
+    summary: 'The default settings encouraged permanent, unlabeled API keys that would be hard to manage later.',
+    bullets: [
+      'Names were optional even though a key could not be renamed later.',
+      '“Never expires” was the default, with no explanation of the risk.',
+      'The warning appeared only after creation, when changing the choice meant deleting the key and starting over.',
+    ],
+    src: '/images/crusoe/figma/api-create-before.png',
+    width: 1440,
+    height: 900,
+  },
+  {
+    label: 'After · Secure-by-default direction',
+    title: 'The safer option became the default.',
+    summary: 'Security guidance now appears while users can still change the decision.',
+    bullets: [
+      'A clear name is required so teams can identify, replace, or revoke a key later.',
+      'Keys expire after 90 days by default, with reminders before the date.',
+      'Users can still create a permanent key, but they see the risk before confirming.',
+    ],
+    src: '/images/crusoe/figma/api-create-after.png',
+    width: 1560,
+    height: 840,
+  },
+  {
+    label: 'Engineering refinement',
+    title: 'Engineering helped simplify the change.',
+    summary: 'We kept the Console’s existing date picker instead of adding a new control.',
+    bullets: [
+      'The existing calendar now opens with a recommended expiration date already selected.',
+      'The build required a safer default, name validation, an opt-out warning, and reminder emails rather than a new flow.',
+      'The security improvement stayed intact while the implementation became smaller and more consistent.',
+    ],
+    src: '/images/crusoe/figma/api-create-refined.png',
+    width: 1000,
+    height: 840,
+  },
+] as const
+
+const monitoringEngineeringRecommendations = [
+  ['01', 'Confirm scope, impact, and intent before the change.'],
+  ['02', 'Make scale-down risk explicit at the decision point.'],
+  ['03', 'Save the operational reason and keep it visible afterward.'],
+  ['04', 'Show progress and completion while asynchronous work runs.'],
+  ['05', 'Keep Console and CLI confirmation language aligned.'],
+] as const
+
+const monitoringFigmaArtifacts = [
+  {
+    number: '01',
+    title: 'Journey-level diagnosis',
+    description: 'The scale-out journey summarized by severity, user consequence, and the operational gaps that shaped the Jira scope.',
+    src: '/images/crusoe/figma/monitoring-journey-overview.png',
+    width: 1440,
+    height: 900,
+  },
+  {
+    number: '02',
+    title: 'Unhealthy-state recovery',
+    description: 'A proposed in-context explanation that shows what failed, how long it has been failing, and where to continue debugging.',
+    src: '/images/crusoe/figma/monitoring-unhealthy-tooltip.png',
+    width: 1240,
+    height: 760,
+  },
+] as const
+
+const billingEngineeringWorkstreams = [
+  ['01', 'Find billing', 'Make the billing entry point discoverable from the places users already manage infrastructure.'],
+  ['02', 'Filter spend', 'Compare cost by time range, project, account, and resource without losing scope.'],
+  ['03', 'Export data', 'Let teams carry detailed cost data into their reporting and operational workflows.'],
+  ['04', 'Billing dashboard', 'Bring totals, trends, scope, and important changes into one clear starting view.'],
+  ['05', 'Cost breakdowns', 'Expose the services and resources driving a change instead of showing only a total.'],
+  ['06', 'Budget alerts', 'Set thresholds and surface exceptions early enough for teams to act.'],
+] as const
+
+const billingFigmaArtifacts = [
+  {
+    number: '01',
+    title: 'Complete billing dashboard',
+    description: 'One reconciling view for totals, scope, trends, filters, product costs, and inference usage.',
+    src: '/images/crusoe/figma/billing-dashboard.png',
+    width: 1440,
+    height: 2048,
+    featured: true,
+  },
+  {
+    number: '02',
+    title: 'Cost breakdown interaction',
+    description: 'A focused chart state for comparing cost, retaining filters, and understanding the price behind a data point.',
+    src: '/images/crusoe/figma/billing-cost-breakdown.png',
+    width: 1440,
+    height: 720,
+    featured: false,
+  },
+  {
+    number: '03',
+    title: 'Budget-alert setup',
+    description: 'A guided threshold flow that turns cost monitoring into a preventive action, not a retrospective report.',
+    src: '/images/crusoe/figma/billing-budget-alerts.png',
+    width: 1440,
+    height: 820,
+    featured: false,
   },
 ] as const
 
@@ -456,39 +677,75 @@ const heuristicScience = [
   ['Error recovery', 'Assume mistakes will happen; explain what failed, preserve context, and provide a clear way forward.'],
 ] as const
 
-const heuristicDeliverables = [
-  ['Journey evidence', 'End-to-end task maps connected each issue to the moment where users lost context or confidence.'],
-  ['Severity rationale', 'Findings were prioritized by task impact, frequency, recoverability, and implementation effort.'],
-  ['Design direction', 'Recommendations translated each heuristic violation into a concrete change in navigation, language, feedback, or guidance.'],
-  ['Shared backlog', 'The final artifact gave design, product, and engineering one structured source for deciding what to address next.'],
+const heuristicDelivery = [
+  ['Write a clear ticket', 'Each Jira ticket showed where the problem happened, how it affected users, the proposed fix, and the states engineering needed to cover.'],
+  ['Set scope with engineering', 'We separated quick fixes from larger changes and agreed on clear acceptance criteria.'],
+  ['Stay involved during the build', 'I answered design and content questions and adjusted the work when technical constraints changed the best approach.'],
+  ['Review the finished experience', 'I tested normal, loading, empty, and error states and checked each shipped change against the original problem.'],
 ] as const
 
-const billingLevels = [
-  ['01', 'Overview', 'Start with a calm summary of usage, spend, and the period being viewed.'],
-  ['02', 'Breakdown', 'Make cost attribution legible across organization, project, account, and Foundry.'],
-  ['03', 'Detail', 'Let users trace a number back to the infrastructure activity that created it.'],
-  ['04', 'Action', 'Surface the next useful move: investigate, export, document, or resolve.'],
-]
+const usageToCostOverview = [
+  ['Before', 'Usage showed how much AI was used, Billing showed the cost, and Analytics and logs showed what the system was doing. These views did not connect.'],
+  ['Why it mattered', 'When cost increased, teams could not quickly tell whether the cause was more traffic, more text, a different model, or a system problem.'],
+  ['My role', 'I designed how Usage, Billing, Analytics, logs, account activity, and budget alerts would work together as one investigation.'],
+] as const
 
-const projectTimeline = [
-  ['01', 'Understand', 'Audit the Console, map first-time journeys, and study comparable cloud products.'],
-  ['02', 'Frame', 'Connect recurring friction to user needs, technical constraints, and product priorities.'],
-  ['03', 'Design', 'Explore interaction patterns, test near-term and future directions, and refine the system in critique.'],
-  ['04', 'Align + hand off', 'Partner with engineering, product, brand, and writing to prepare implementation-ready work.'],
-]
+const usageToCostBeforeFlow = [
+  'Notice a higher bill',
+  'Select the same project and dates again',
+  'Search analytics and logs',
+  'Compare the evidence by hand',
+] as const
+
+const usageToCostQuestions = [
+  ['01', 'What changed?', 'Compare this period with the last one, then see which day the change began.'],
+  ['02', 'What caused it?', 'See which product created the cost, how much of the total it represents, and how that product is priced.'],
+  ['03', 'What happened underneath?', 'Continue into traffic, speed, failed requests, and account changes without losing the selected project or dates.'],
+] as const
+
+const usageToCostProcess = [
+  ['01', 'List the questions', 'Started with what a team asks after noticing unexpected usage or cost, then identified the evidence needed for each answer.'],
+  ['02', 'Keep filters consistent', 'Carried the project, model, and date range across the flow so every screen referred to the same data.'],
+  ['03', 'Reveal detail in steps', 'Moved from a high-level comparison to the daily trend, responsible product, and specific requests or account changes.'],
+  ['04', 'Test the full path', 'Connected Billing, Analytics, logs, and account history, then tested them as one continuous investigation.'],
+] as const
+
+const usageDesignNotes = [
+  ['Keep the right units', 'Text usage stays in tokens and video usage stays in seconds. The layout is consistent even though the measurements are different.'],
+  ['Keep filters visible', 'Project, model, and dates stay on screen while users switch measures, preventing accidental comparisons.'],
+  ['Show when the change happened', 'The summary shows whether usage rose or fell, while the daily chart reveals the exact time of the change.'],
+] as const
+
+const costDesignNotes = [
+  ['Show the change first', 'Current and previous totals immediately show whether cost moved and by how much.'],
+  ['Explain the total', 'Product cards show each product’s dollars, share of the bill, and pricing unit.'],
+  ['Place actions where they matter', 'Budget alerts, details, and analytics appear beside the cost information that makes them useful.'],
+] as const
+
+const investigationDesignNotes = [
+  ['Analytics', 'Traffic, processing volume, token mix, and response time show how the workload changed.'],
+  ['Event logs', 'Search, status filters, request details, and CSV export help isolate an expensive or failed request.'],
+  ['Activity history', 'Model updates, endpoint changes, and user actions show what changed near the same time as the cost increase.'],
+] as const
+
+const usageToCostDecisions = [
+  ['Explain a cost increase', 'The flow moves from the total to the trend and then the responsible product.'],
+  ['Keep the same context', 'Project, model, and date filters carry forward instead of making users select them again.'],
+  ['Help teams respond', 'Alerts and system details turn Billing into a place to understand a problem and act on it.'],
+] as const
 
 const collaborationRhythm = [
-  ['01', 'Audit', 'Design + product', 'Shared recurring patterns and aligned on which journeys needed the most attention.'],
-  ['02', 'Working sessions', 'Product + engineering', 'Turned open questions into technical constraints, priorities, and testable directions.'],
-  ['03', 'Critique', 'Design + brand + writing', 'Refined hierarchy, terminology, visual language, and the amount of guidance each moment needed.'],
-  ['04', 'Handoff', 'Engineering', 'Documented states, behavior, content, and future considerations so decisions stayed clear during implementation.'],
+  ['01', 'Audit', 'Design + product', 'Found repeated problems and agreed on the journeys that needed attention first.'],
+  ['02', 'Working sessions', 'Product + engineering', 'Turned open questions into technical limits, priorities, and testable solutions.'],
+  ['03', 'Critique', 'Design + brand + writing', 'Simplified the hierarchy, wording, visuals, and amount of guidance on each screen.'],
+  ['04', 'Handoff', 'Engineering', 'Documented every state, interaction, and content decision so the build stayed clear.'],
 ] as const
 
 const internshipOutcomes = [
-  ['System', 'Created reusable patterns that could bring consistent guidance to empty surfaces across the Console.'],
-  ['Direction', 'Separated a focused, shippable V1 from richer future onboarding concepts so the roadmap stayed clear.'],
-  ['Priorities', 'Turned journey-level usability findings into recommendations organized by severity and effort.'],
-  ['Handoff', 'Delivered structured Figma files, technical context, and documentation for cross-functional implementation.'],
+  ['Reusable patterns', 'Created one empty-state system for the Console, with a focused first release and a clear next version.'],
+  ['Clearer billing', 'Connected AI usage, cost, the responsible product, and the system activity behind it.'],
+  ['Shippable priorities', 'Turned usability findings into Jira tickets ranked by user impact and engineering effort.'],
+  ['Clear handoff', 'Delivered final designs, edge cases, behavior notes, and implementation guidance.'],
 ]
 
 const crusoeProjects = [
@@ -530,21 +787,6 @@ export default function CrusoeCaseStudy() {
     window.history.replaceState(null, '', `#${projectId}`)
   }
 
-  const handleProjectKeyDown = (event: KeyboardEvent<HTMLDivElement>) => {
-    if (!['ArrowLeft', 'ArrowRight', 'Home', 'End'].includes(event.key)) return
-    event.preventDefault()
-
-    const currentIndex = crusoeProjects.findIndex((project) => project.id === activeProject)
-    const nextIndex = event.key === 'Home'
-      ? 0
-      : event.key === 'End'
-        ? crusoeProjects.length - 1
-        : (currentIndex + (event.key === 'ArrowRight' ? 1 : -1) + crusoeProjects.length) % crusoeProjects.length
-    const nextProject = crusoeProjects[nextIndex]
-    selectProject(nextProject.id)
-    document.getElementById(`crusoe-tab-${nextProject.id}`)?.focus()
-  }
-
   return (
     <main className="crusoe-case crusoe-cloud-case">
       <nav className="crusoe-case-nav" aria-label="Case study navigation">
@@ -560,8 +802,9 @@ export default function CrusoeCaseStudy() {
           <p className="crusoe-eyebrow">Most recent internship · Cloud infrastructure</p>
           <h1>Making complex cloud workflows feel clear.</h1>
           <p className="crusoe-lede">
-            At Crusoe, I led three connected product design initiatives across the Console: a reusable empty-state system,
-            a heuristic evaluation of critical journeys, and a clearer bridge between infrastructure usage and cost.
+            Crusoe provides the computing power that AI teams need to build and run products. I worked on the Console, the
+            web app where customers create resources, monitor them, and understand what they cost. This case study covers
+            three projects: first-time guidance, a usability review, and a clearer connection between usage and billing.
           </p>
         </div>
 
@@ -595,58 +838,11 @@ export default function CrusoeCaseStudy() {
         <p className="crusoe-disclosure">Selected internship work is presented at an appropriate level of detail.</p>
       </header>
 
-      <section className="crusoe-impact-band" aria-label="Internship impact summary">
-        <div><strong>01</strong><span>Reusable empty-state system</span></div>
-        <div><strong>02</strong><span>Heuristic evaluation of IaaS cloud console</span></div>
-        <div><strong>03</strong><span>Intelligence Foundry usage-to-cost model</span></div>
-      </section>
-
-      <section className="crusoe-case-section intro-section">
-        <div className="crusoe-section-label"><span>01 · Overview</span><strong>One internship, three layers of clarity.</strong></div>
-        <div className="crusoe-intro-grid">
-          <h2>From first-run moments to high-stakes cloud decisions.</h2>
-          <div>
-            <p>
-              The work moved across different scales, but the design question stayed consistent: how can the Console help
-              people understand where they are, what is happening, and what to do next?
-            </p>
-            <p>
-              I worked from systems-level audits down to individual interaction details, combining competitive research,
-              journey mapping, cognitive principles, visual design, and close cross-functional collaboration.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="crusoe-case-section crusoe-problem-section">
-        <div className="crusoe-section-label"><span>02 · Challenge</span><strong>Designing for a technical product with a steep learning curve</strong></div>
-        <div className="crusoe-problem-grid">
-          <div>
-            <p className="crusoe-eyebrow">Problem statement</p>
-            <h2>How might the Console explain complex infrastructure clearly enough for users to act with confidence?</h2>
-          </div>
-          <div className="crusoe-problem-context">
-            <p>
-              Crusoe Console helps users manage compute infrastructure, storage, clusters, credentials, resource usage,
-              and billing. Across these workflows, missing context could make an intentional state feel broken or make a
-              high-consequence action difficult to understand.
-            </p>
-            <p>
-              My work focused on reducing that uncertainty at three levels: first-run guidance, end-to-end usability,
-              and the connection between infrastructure activity and cost.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <section className="crusoe-case-section crusoe-process-section">
-        <div className="crusoe-section-label"><span>03 · Process</span><strong>Project timeline</strong></div>
+      <section className="crusoe-case-section crusoe-process-section" aria-labelledby="crusoe-internship-process-title">
+        <div className="crusoe-section-label"><span>Process</span><strong>Shared across all three projects</strong></div>
         <div className="crusoe-process-intro">
-          <h2>A repeatable path from ambiguity to an implementation-ready direction.</h2>
-          <p>
-            Each initiative moved at a different pace, but the underlying process stayed consistent: understand the
-            system, frame the right problem, design at multiple horizons, and align the final direction with the people building it.
-          </p>
+          <h2 id="crusoe-internship-process-title">A repeatable path from ambiguity to an implementation-ready direction.</h2>
+          <p>Each initiative moved at a different pace, but the underlying process stayed consistent: understand the system, frame the right problem, design at multiple horizons, and align the final direction with the people building it.</p>
         </div>
         <div className="crusoe-timeline" aria-label="Crusoe internship design process">
           {projectTimeline.map(([number, title, body]) => (
@@ -660,59 +856,39 @@ export default function CrusoeCaseStudy() {
         </div>
       </section>
 
-      <section className="crusoe-project-workspace" aria-labelledby="crusoe-projects-title">
-        <div className="crusoe-project-switcher crusoe-case-section">
-          <div className="crusoe-project-switcher-copy">
-            <p className="crusoe-eyebrow">Three projects · One internship</p>
-            <h2 id="crusoe-projects-title">Explore one case study at a time.</h2>
-            <p>Each project has its own problem, process, artifacts, and outcome—without making you scroll through the other two first.</p>
-          </div>
-
-          <div
-            className="crusoe-project-tabs"
-            role="tablist"
-            aria-label="Crusoe internship projects"
-            onKeyDown={handleProjectKeyDown}
+      <nav className="crusoe-impact-band crusoe-project-shortcuts" aria-label="Choose a Crusoe project">
+        {crusoeProjects.map((project) => (
+          <button
+            key={project.id}
+            type="button"
+            aria-label={`Read project ${project.number}: ${project.tabLabel}`}
+            aria-controls={`crusoe-panel-${project.id}`}
+            aria-pressed={activeProject === project.id}
+            onClick={() => selectProject(project.id)}
           >
-            {crusoeProjects.map((project) => {
-              const isActive = activeProject === project.id
-              return (
-                <button
-                  key={project.id}
-                  id={`crusoe-tab-${project.id}`}
-                  type="button"
-                  role="tab"
-                  aria-selected={isActive}
-                  aria-controls={`crusoe-panel-${project.id}`}
-                  tabIndex={isActive ? 0 : -1}
-                  className={isActive ? 'is-active' : ''}
-                  onClick={() => selectProject(project.id)}
-                >
-                  <span className="crusoe-project-tab-number">{project.number}</span>
-                  <span className="crusoe-project-tab-copy">
-                    <strong>{project.tabLabel}</strong>
-                    <small>{project.description}</small>
-                  </span>
-                  <span className="crusoe-project-tab-mark" aria-hidden="true">↗</span>
-                </button>
-              )
-            })}
-          </div>
-        </div>
+            <strong>{project.number}</strong>
+            <span>{project.tabLabel}</span>
+            <i aria-hidden="true">↗</i>
+          </button>
+        ))}
+      </nav>
+
+      <section className="crusoe-project-workspace" aria-label="Crusoe internship project details">
 
         {activeProject === 'empty-state-system' && (
       <section
         id="crusoe-panel-empty-state-system"
         role="tabpanel"
-        aria-labelledby="crusoe-tab-empty-state-system"
+        aria-label="Empty-state system project"
         className="crusoe-case-section project-section green-section crusoe-project-panel"
       >
-        <div className="crusoe-section-label"><span>01 · Overview</span><strong>Console empty states</strong></div>
+        <div className="crusoe-section-label"><span>Project overview</span><strong>Console empty states</strong></div>
         <div className="crusoe-project-heading">
           <h2>Turn an empty screen into a useful starting point.</h2>
           <p>
-            Empty states appeared across products and UI patterns, but they did not yet behave like one system. I audited
-            the Console, studied cloud competitors, and designed a first version that could ship while leaving room for richer onboarding.
+            An empty state is what someone sees before they create a resource or receive data. These screens were inconsistent
+            across the Console, so I audited the product and designed one reusable pattern. The first version was simple enough
+            to ship quickly, with a second version showing how guidance could become more helpful over time.
           </p>
         </div>
 
@@ -729,8 +905,8 @@ export default function CrusoeCaseStudy() {
           <div className="crusoe-clean-heading">
             <span>02 · Audit</span>
             <div>
-              <h3 id="crusoe-clean-audit-title">Start with the whole Console, not one empty page.</h3>
-              <p>I audited twelve surfaces across pages, tables, charts, cards, dropdowns, and modals, then followed a brand-new account across five product areas to see where the same confusion repeated.</p>
+              <h3 id="crusoe-clean-audit-title">I looked for the same problem across the whole Console.</h3>
+              <p>I reviewed twelve screens and interface patterns, then followed a new account through five product areas. This showed where first-time users repeatedly lost context or reached a dead end.</p>
             </div>
           </div>
           <div className="crusoe-clean-audit-layout">
@@ -748,14 +924,47 @@ export default function CrusoeCaseStudy() {
               ))}
             </div>
           </div>
+
+          <section className="crusoe-before-evidence" aria-labelledby="crusoe-before-evidence-title">
+            <div className="crusoe-before-evidence-heading">
+              <span>Before · existing Console</span>
+              <div>
+                <h4 id="crusoe-before-evidence-title">The same first-time moment looked different in every product area.</h4>
+                <p>These are six real screens from the audit. Some offered only a create button, some relied on technical language, and others revealed missing requirements only after the user tried to continue.</p>
+              </div>
+            </div>
+
+            <div className="crusoe-before-screen-grid" aria-label="Examples of Crusoe Console empty states before the redesign">
+              {currentEmptyStateScreens.map(({ label, src, width, height }, index) => (
+                <figure key={`before-${src}`}>
+                  <div className="crusoe-before-screen-media">
+                    <Image
+                      src={src}
+                      alt={`${label} empty state before the redesign`}
+                      width={width}
+                      height={height}
+                      sizes="(max-width: 760px) 90vw, 42vw"
+                    />
+                  </div>
+                  <figcaption><span>0{index + 1}</span><strong>{label}</strong></figcaption>
+                </figure>
+              ))}
+            </div>
+
+            <div className="crusoe-before-patterns" aria-label="Problems visible in the previous empty states">
+              <article><span>01</span><strong>Uneven explanation</strong><p>Users received different amounts of context depending on where they entered the Console.</p></article>
+              <article><span>02</span><strong>Actions without preparation</strong><p>Create buttons appeared before prerequisites, expected outcomes, or useful starting choices were clear.</p></article>
+              <article><span>03</span><strong>Different states felt identical</strong><p>Truly empty, blocked, and missing-prerequisite moments were not clearly distinguished.</p></article>
+            </div>
+          </section>
         </section>
 
         <section className="crusoe-clean-section" aria-labelledby="crusoe-clean-problem-title">
           <div className="crusoe-clean-heading">
             <span>03 · Problem framing</span>
             <div>
-              <h3 id="crusoe-clean-problem-title">The issue was not emptiness. It was uncertainty.</h3>
-              <p>The audit reframed the work from “design an empty state” to “build a repeatable first-run system that explains the product, guides one action, and stays useful as the resource changes state.”</p>
+              <h3 id="crusoe-clean-problem-title">The real problem was not an empty screen. It was not knowing what to do next.</h3>
+              <p>The goal became clear: explain what the product does, recommend one next step, and keep users informed after they start an action.</p>
             </div>
           </div>
           <div className="crusoe-clean-problem-layout">
@@ -764,9 +973,9 @@ export default function CrusoeCaseStudy() {
               <figcaption>Problem-framing artifact from the working FigJam</figcaption>
             </figure>
             <div className="crusoe-clean-problem-steps">
-              <article><span>Current state</span><h4>Empty pages assumed technical familiarity.</h4><p>Users could see that nothing existed, but not always what the resource was, why they needed it, or what should happen first.</p></article>
-              <article><span>User need</span><h4>Orientation before configuration.</h4><p>First-time users needed product context, setup guidance, and one recommended next step without a wall of instructions.</p></article>
-              <article><span>Design opportunity</span><h4>A system that changes with the resource.</h4><p>The pattern needed to cover the first choice and continue through prerequisites, provisioning, failure, recovery, and readiness.</p></article>
+              <article><span>What users saw</span><h4>An empty page with too little explanation.</h4><p>Users could tell that nothing existed, but not what the resource did, why they needed it, or what to create first.</p></article>
+              <article><span>What users needed</span><h4>A short explanation and one clear next step.</h4><p>First-time users needed enough context to begin without reading a wall of technical instructions.</p></article>
+              <article><span>What I designed</span><h4>One pattern that changes as the resource changes.</h4><p>The guidance covers setup requirements, creation in progress, failure, recovery, and the next step after success.</p></article>
             </div>
           </div>
         </section>
@@ -775,8 +984,8 @@ export default function CrusoeCaseStudy() {
           <div className="crusoe-clean-heading">
             <span>04 · Competitive analysis</span>
             <div>
-              <h3 id="crusoe-clean-competitive-title">Benchmark the strongest first-run patterns in cloud products.</h3>
-              <p>I compared how peer cloud consoles orient new users, present starting configurations, connect documentation, and communicate lifecycle states. The goal was not to copy a screen—it was to identify which patterns reduced uncertainty.</p>
+              <h3 id="crusoe-clean-competitive-title">I studied how other cloud products guide new users.</h3>
+              <p>I compared how similar products explain resources, recommend a first setup, place documentation, and show progress or errors. I used the clearest patterns as principles, not as screens to copy.</p>
             </div>
           </div>
           <div className="crusoe-competitive-table" role="table" aria-label="Competitive analysis translated into Crusoe design decisions">
@@ -790,7 +999,7 @@ export default function CrusoeCaseStudy() {
           </div>
           <div className="crusoe-competitive-takeaway">
             <span>Competitive takeaway</span>
-            <p>The clearest products did three things well: explain the resource in product language, reduce the first decision to one useful path, and keep feedback visible after the user acts.</p>
+            <p>The clearest products explained the resource in plain language, recommended one starting path, and showed visible feedback after the user acted.</p>
           </div>
         </section>
 
@@ -798,8 +1007,8 @@ export default function CrusoeCaseStudy() {
           <div className="crusoe-clean-heading">
             <span>05 · V1</span>
             <div>
-              <h3 id="crusoe-clean-v1-title">Ship the consistent foundation first.</h3>
-              <p>V1 fit the existing Console architecture: a product-specific illustration, a clear title, concise guidance, one primary action, and a secondary path to documentation.</p>
+              <h3 id="crusoe-clean-v1-title">The first release focused on consistency.</h3>
+              <p>Every empty state received the same basic structure: a relevant illustration, a clear title, a short explanation, one primary action, and a link to documentation.</p>
             </div>
           </div>
           <div className="crusoe-clean-v1-layout">
@@ -819,8 +1028,8 @@ export default function CrusoeCaseStudy() {
           <div className="crusoe-clean-heading">
             <span>06 · V2</span>
             <div>
-              <h3 id="crusoe-clean-v2-title">Extend the foundation into contextual onboarding.</h3>
-              <p>V2 adds recommendation cards for the first choice and a persistent banner layer for everything that happens after it. The richer direction stayed separate so it could inform the roadmap without blocking V1.</p>
+              <h3 id="crusoe-clean-v2-title">The next version adds guidance before and after creation.</h3>
+              <p>Recommended setup cards help users make the first choice. Persistent banners then explain what is happening, what went wrong, or what to do next. Keeping this work separate allowed the simpler first release to move forward.</p>
             </div>
           </div>
           <figure className="crusoe-clean-v2-hero">
@@ -829,7 +1038,7 @@ export default function CrusoeCaseStudy() {
           </figure>
           <div className="crusoe-clean-edge-intro">
             <span>Edge-case banner system</span>
-            <p>The cards help users choose a starting point. The banners keep them oriented through the complete resource lifecycle.</p>
+            <p>The cards recommend where to start. The banners explain progress, failure, recovery, and readiness.</p>
           </div>
           <div className="crusoe-clean-banner-grid">
             {futureBannerCases.map(([title, body, image]) => (
@@ -845,8 +1054,8 @@ export default function CrusoeCaseStudy() {
           <div className="crusoe-clean-heading">
             <span>07 · Collaboration</span>
             <div>
-              <h3 id="crusoe-clean-collaboration-title">The release strategy came from working through constraints together.</h3>
-              <p>I shared the work early with design, product, engineering, brand, and technical writing. Each review narrowed ambiguity and made the system easier to build and extend.</p>
+              <h3 id="crusoe-clean-collaboration-title">Team feedback shaped what we shipped first.</h3>
+              <p>I reviewed the work early with design, product, engineering, brand, and technical writing. Together, we chose a focused first release and made each part easier to build and reuse.</p>
             </div>
           </div>
           <div className="crusoe-clean-collaboration-grid">
@@ -855,21 +1064,21 @@ export default function CrusoeCaseStudy() {
             ))}
           </div>
           <div className="crusoe-clean-ai-callout">
-            <div><span>AI-assisted workflow</span><h4>Claude Code accelerated synthesis, exploration, and critique.</h4></div>
-            <p>I used AI to cluster repeated observations, pressure-test content variants, and surface missing states. I checked every theme against the source artifacts, and the team validated technical accuracy, feasibility, tone, and the final product decisions.</p>
+            <div><span>AI-assisted workflow</span><h4>Claude Code helped me organize findings and test alternatives.</h4></div>
+            <p>I used AI to group repeated observations, compare wording options, and look for missing states. I checked every result against the original research, and the team made the final decisions about accuracy, feasibility, and tone.</p>
           </div>
           <div className="crusoe-collaboration-outcome">
-            <span>What changed because of collaboration</span>
-            <p>The team moved from an ambitious all-at-once onboarding concept to a focused V1 that could ship, while preserving V2 as a concrete future-release system instead of losing the larger idea.</p>
+            <span>What the team decided</span>
+            <p>We shipped a simple, consistent first version and saved the more advanced guidance as a clearly documented next step.</p>
           </div>
         </section>
 
-        <section className="crusoe-clean-section" aria-labelledby="crusoe-clean-outcome-title">
+        <section className="crusoe-clean-section crusoe-clean-outcome-section" aria-labelledby="crusoe-clean-outcome-title">
           <div className="crusoe-clean-heading">
             <span>08 · Outcome</span>
             <div>
               <h3 id="crusoe-clean-outcome-title">One pattern, applied across the Console.</h3>
-              <p>The final work paired an implementation-ready V1 with a documented V2 direction, giving the team both an immediate improvement and a clear path toward richer onboarding.</p>
+              <p>The team received a first version ready to build and a clearly documented plan for a more guided second version.</p>
             </div>
           </div>
           <div className="crusoe-motion-grid crusoe-clean-motion-grid">
@@ -892,15 +1101,16 @@ export default function CrusoeCaseStudy() {
       <section
         id="crusoe-panel-heuristic-evaluation"
         role="tabpanel"
-        aria-labelledby="crusoe-tab-heuristic-evaluation"
+        aria-label="Heuristic evaluation project"
         className="crusoe-case-section project-section blue-section crusoe-project-panel"
       >
-        <div className="crusoe-section-label"><span>01 · Overview</span><strong>Heuristic evaluation of IaaS cloud console</strong></div>
+        <div className="crusoe-section-label"><span>Project overview</span><strong>Cloud Console usability evaluation</strong></div>
         <div className="crusoe-project-heading">
-          <h2>Find the friction hiding between screens.</h2>
+          <h2>A structured usability review became nine shipped improvements.</h2>
           <p>
-            I evaluated three critical Console journeys using Nielsen&apos;s heuristics and cognitive science principles,
-            mapped end-to-end workflows, scored issues by severity, and translated findings into prioritized design recommendations.
+            A heuristic evaluation is a structured way to find usability problems. I reviewed three important tasks: checking
+            costs, setting up an API key, and debugging a resource. I then turned the most serious findings into Jira tickets
+            and worked with engineering through implementation and QA.
           </p>
         </div>
 
@@ -912,77 +1122,37 @@ export default function CrusoeCaseStudy() {
 
         <section className="crusoe-clean-section crusoe-he-section" aria-labelledby="crusoe-he-method-title">
           <div className="crusoe-clean-heading">
-            <span>02 · Method</span>
+            <span>02 · How I worked</span>
             <div>
-              <h3 id="crusoe-he-method-title">I evaluated each issue by principle, user impact, and severity.</h3>
-              <p>The evaluation combined a structured interface review with journey-level context. Every finding had to name the violated principle, explain the user consequence, and point toward a concrete design response.</p>
+              <h3 id="crusoe-he-method-title">Every finding needed to lead to a clear fix.</h3>
+              <p>For each problem, I documented what happened, which usability principle it broke, how it affected users, how serious it was, and what the team could build.</p>
             </div>
           </div>
-
-          <figure className="crusoe-he-artifact crusoe-he-artifact-wide">
-            <Image src="/images/crusoe/heuristic-method.png" alt="Figma overview explaining Nielsen heuristics and the cognitive-science foundation of the evaluation" width={1440} height={900} sizes="(max-width: 900px) 92vw, 86vw" />
-            <figcaption><span>Working framework</span><strong>A structured method—not a taste-based critique</strong></figcaption>
-          </figure>
 
           <div className="crusoe-he-method-grid">
             {heuristicMethod.map(([number, title, body]) => (
               <article key={number}><span>{number}</span><h4>{title}</h4><p>{body}</p></article>
             ))}
           </div>
-        </section>
-
-        <section className="crusoe-clean-section crusoe-he-section" aria-labelledby="crusoe-he-framework-title">
-          <div className="crusoe-clean-heading">
-            <span>03 · Framework</span>
-            <div>
-              <h3 id="crusoe-he-framework-title">Ten principles created one consistent evaluation language.</h3>
-              <p>The framework made findings comparable across navigation, setup, system feedback, documentation, and error states—even when the underlying Console surfaces looked very different.</p>
-            </div>
-          </div>
-
-          <figure className="crusoe-he-artifact crusoe-he-artifact-wide">
-            <Image src="/images/crusoe/heuristic-principles.png" alt="Figma frame documenting Nielsen's ten usability heuristics used in the Crusoe Console evaluation" width={1440} height={900} sizes="(max-width: 900px) 92vw, 86vw" />
-            <figcaption><span>Evaluation rubric</span><strong>Nielsen&apos;s ten heuristics, translated into observable interface behavior</strong></figcaption>
-          </figure>
 
           <div className="crusoe-he-principle-band">
-            <span>How I used it</span>
-            <p>A heuristic name alone was never the finding. The useful unit was: <strong>observable behavior → violated principle → user consequence → recommended change.</strong></p>
-          </div>
-        </section>
-
-        <section className="crusoe-clean-section crusoe-he-section" aria-labelledby="crusoe-he-benchmark-title">
-          <div className="crusoe-clean-heading">
-            <span>04 · Benchmark</span>
-            <div>
-              <h3 id="crusoe-he-benchmark-title">Compare friction and flow in products built for technical users.</h3>
-              <p>I used Stripe and AWS as contrasting references: one demonstrates progressive guidance and visible system status; the other shows how terminology, density, and hidden navigation can amplify cognitive load.</p>
-            </div>
+            <span>Evaluation logic</span>
+            <p>I did not stop at naming a principle. Every finding followed the same path: <strong>what happened → why it was a problem → how it affected users → what should change.</strong></p>
           </div>
 
-          <div className="crusoe-he-benchmark-grid">
-            <figure className="crusoe-he-artifact">
-              <Image src="/images/crusoe/heuristic-stripe.png" alt="Figma competitive heuristic evaluation of Stripe developer onboarding" width={1440} height={900} sizes="(max-width: 900px) 92vw, 43vw" />
-              <figcaption><span>Good reference</span><strong>Stripe · guidance stays close to the task</strong></figcaption>
-            </figure>
-            <figure className="crusoe-he-artifact">
-              <Image src="/images/crusoe/heuristic-aws.png" alt="Figma competitive heuristic evaluation of AWS Console complexity" width={1440} height={900} sizes="(max-width: 900px) 92vw, 43vw" />
-              <figcaption><span>Poor reference</span><strong>AWS · density and jargon obscure the path</strong></figcaption>
-            </figure>
-          </div>
-
-          <div className="crusoe-he-benchmark-takeaway">
-            <span>Benchmark takeaway</span>
-            <blockquote>Technical depth does not require interface complexity. The strongest products expose complexity progressively and keep state, language, and next steps visible.</blockquote>
+          <div className="crusoe-he-science-strip" aria-label="Cognitive-science lenses used in the evaluation">
+            {heuristicScience.map(([title, body], index) => (
+              <article key={title}><span>0{index + 1}</span><div><h4>{title}</h4><p>{body}</p></div></article>
+            ))}
           </div>
         </section>
 
         <section className="crusoe-clean-section crusoe-he-section" aria-labelledby="crusoe-he-findings-title">
           <div className="crusoe-clean-heading">
-            <span>05 · Journey findings</span>
+            <span>03 · Journey → shipped change</span>
             <div>
-              <h3 id="crusoe-he-findings-title">Three journeys showed exactly where the Console lost users.</h3>
-              <p>I organized the findings by task—not by screen—so the team could see the user goal, the breakdown, the violated principles, and the recommended change in one pass.</p>
+              <h3 id="crusoe-he-findings-title">I reviewed complete tasks, not isolated screens.</h3>
+              <p>Each journey shows the user’s goal, where the experience broke down, the usability principles involved, and the improvements that shipped.</p>
             </div>
           </div>
 
@@ -1008,6 +1178,12 @@ export default function CrusoeCaseStudy() {
                   <span>{journey.focus}</span>
                 </header>
 
+                <ol className="crusoe-he-journey-path" aria-label={`${journey.title} evaluated path`}>
+                  {journey.path.map((step, index) => (
+                    <li key={step}><span>0{index + 1}</span><strong>{step}</strong></li>
+                  ))}
+                </ol>
+
                 <div className="crusoe-he-journey-body">
                   <section className="crusoe-he-journey-friction">
                     <span>Observed friction</span>
@@ -1024,55 +1200,189 @@ export default function CrusoeCaseStudy() {
                   </section>
 
                   <section className="crusoe-he-journey-response">
-                    <span>Design response</span>
-                    <p>{journey.response}</p>
-                    <footer><strong>What improves</strong><p>{journey.result}</p></footer>
+                    <span>Shipped deliverables</span>
+                    <ul className="crusoe-he-changes">
+                      {journey.shipped.map((deliverable) => <li key={deliverable}>{deliverable}</li>)}
+                    </ul>
+                    <div className="crusoe-he-ticket-track"><span>Jira delivery track</span><strong>{journey.jira}</strong></div>
+                    <footer><strong>Shipped outcome</strong><p>{journey.result}</p></footer>
                   </section>
                 </div>
+
+                {journey.id === 'api-keys' && (
+                  <section className="crusoe-he-figma-evidence" aria-labelledby="crusoe-api-key-scenarios-title">
+                    <div className="crusoe-he-figma-evidence-copy">
+                      <span>Evaluation evidence</span>
+                      <h5 id="crusoe-api-key-scenarios-title">From a hidden entry point to a safer first-key experience.</h5>
+                      <p>The evaluation shows where the API-key task broke down. The proposed screens show how the fix made the path easier to find and safer to complete.</p>
+                    </div>
+
+                    <div className="crusoe-he-figma-evidence-grid">
+                      {apiKeyFigmaArtifacts.map((artifact) => (
+                        <figure key={artifact.title} className={artifact.featured ? 'is-featured' : undefined}>
+                          <div className="crusoe-he-figma-evidence-media">
+                            <a href={artifact.src} target="_blank" rel="noreferrer" aria-label={`Open ${artifact.title} full size`}>
+                              <Image
+                                src={artifact.src}
+                                alt={`${artifact.title} frame from the Crusoe heuristic evaluation`}
+                                width={artifact.width}
+                                height={artifact.height}
+                                sizes={artifact.featured ? '(max-width: 900px) 90vw, 78vw' : '(max-width: 760px) 90vw, 42vw'}
+                              />
+                            </a>
+                          </div>
+                          <figcaption><span>{artifact.number}</span><div><strong>{artifact.title}</strong><p>{artifact.description}</p><a href={artifact.src} target="_blank" rel="noreferrer">Open full frame ↗</a></div></figcaption>
+                        </figure>
+                      ))}
+                    </div>
+
+                    <section className="crusoe-he-secure-creation" aria-labelledby="crusoe-api-secure-creation-title">
+                      <header>
+                        <span>Secure creation · before → after</span>
+                        <div>
+                          <h6 id="crusoe-api-secure-creation-title">Security guidance needed to appear before the key was created.</h6>
+                          <p>The old modal made unnamed, permanent keys easy to create and explained the risk only afterward. I changed the flow so users name the key, choose an expiration date, and understand the risk before confirming.</p>
+                        </div>
+                      </header>
+
+                      <div className="crusoe-he-secure-creation-decision">
+                        <span>Design decision</span>
+                        <strong>Make the safer choice the default, while still allowing permanent access when someone knowingly needs it.</strong>
+                      </div>
+
+                      <div className="crusoe-he-secure-creation-steps">
+                        {apiSecureCreationSteps.map((step, index) => (
+                          <article key={step.label}>
+                            <div className="crusoe-he-secure-creation-copy">
+                              <span>{step.label}</span>
+                              <h6>{step.title}</h6>
+                              <p>{step.summary}</p>
+                              <ul>
+                                {step.bullets.map((bullet) => <li key={bullet}>{bullet}</li>)}
+                              </ul>
+                            </div>
+                            <figure>
+                              <div className="crusoe-he-figma-evidence-media">
+                                <a href={step.src} target="_blank" rel="noreferrer" aria-label={`Open ${step.label} secure API-key creation frame full size`}>
+                                  <Image
+                                    src={step.src}
+                                    alt={`${step.label} secure API-key creation design from the Crusoe heuristic evaluation`}
+                                    width={step.width}
+                                    height={step.height}
+                                    sizes="(max-width: 900px) 90vw, 78vw"
+                                  />
+                                </a>
+                              </div>
+                              <figcaption><span>0{index + 1}</span><a href={step.src} target="_blank" rel="noreferrer">Open full frame ↗</a></figcaption>
+                            </figure>
+                          </article>
+                        ))}
+                      </div>
+
+                      <footer>
+                        <span>What changed</span>
+                        <p><strong>Before:</strong> optional naming, indefinite access by default, and a warning after creation. <strong>After:</strong> required identity, expiry by default, advance alerts, and an explicit warning before opting out.</p>
+                      </footer>
+                    </section>
+                  </section>
+                )}
+
+                {journey.id === 'monitoring-debugging' && (
+                  <section className="crusoe-he-ops-artifact" aria-labelledby="crusoe-monitoring-recommendations-title">
+                    <div className="crusoe-he-ops-artifact-copy">
+                      <span>Five scoped recommendations</span>
+                      <h5 id="crusoe-monitoring-recommendations-title">Users needed to understand the effect of a change before and after they made it.</h5>
+                      <p>For each recommendation, I showed the expected behavior, the necessary screen states, and the details engineering needed to build it.</p>
+
+                      <ol>
+                        {monitoringEngineeringRecommendations.map(([number, recommendation]) => (
+                          <li key={number}><span>{number}</span><p>{recommendation}</p></li>
+                        ))}
+                      </ol>
+                    </div>
+
+                    <div className="crusoe-he-ops-figma-stack">
+                      {monitoringFigmaArtifacts.map((artifact) => (
+                        <figure key={artifact.title}>
+                          <div className="crusoe-he-figma-evidence-media">
+                            <a href={artifact.src} target="_blank" rel="noreferrer" aria-label={`Open ${artifact.title} full size`}>
+                              <Image
+                                src={artifact.src}
+                                alt={`${artifact.title} frame from the Crusoe monitoring evaluation`}
+                                width={artifact.width}
+                                height={artifact.height}
+                                sizes="(max-width: 900px) 90vw, 78vw"
+                              />
+                            </a>
+                          </div>
+                          <figcaption><span>{artifact.number}</span><div><strong>{artifact.title}</strong><p>{artifact.description}</p><a href={artifact.src} target="_blank" rel="noreferrer">Open full frame ↗</a></div></figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
+                {journey.id === 'cost-monitoring' && (
+                  <section className="crusoe-he-billing-artifact" aria-labelledby="crusoe-billing-workstreams-title">
+                    <div className="crusoe-he-billing-artifact-copy">
+                      <span>Six billing workstreams</span>
+                      <h5 id="crusoe-billing-workstreams-title">Six connected improvements made costs easier to find, explain, and control.</h5>
+                      <p>The work connected billing entry points, filters, reports, cost breakdowns, and alerts around one goal: helping teams understand and manage spend.</p>
+
+                      <div className="crusoe-he-billing-workstream-grid">
+                        {billingEngineeringWorkstreams.map(([number, title, description]) => (
+                          <article key={title}>
+                            <span>{number}</span>
+                            <div><h6>{title}</h6><p>{description}</p></div>
+                          </article>
+                        ))}
+                      </div>
+                    </div>
+
+                    <div className="crusoe-he-figma-evidence-grid crusoe-he-billing-figma-grid">
+                      {billingFigmaArtifacts.map((artifact) => (
+                        <figure key={artifact.title} className={artifact.featured ? 'is-featured' : undefined}>
+                          <div className="crusoe-he-figma-evidence-media">
+                            <a href={artifact.src} target="_blank" rel="noreferrer" aria-label={`Open ${artifact.title} full size`}>
+                              <Image
+                                src={artifact.src}
+                                alt={`${artifact.title} frame from the Crusoe cost-monitoring evaluation`}
+                                width={artifact.width}
+                                height={artifact.height}
+                                sizes={artifact.featured ? '(max-width: 900px) 90vw, 78vw' : '(max-width: 760px) 90vw, 42vw'}
+                              />
+                            </a>
+                          </div>
+                          <figcaption><span>{artifact.number}</span><div><strong>{artifact.title}</strong><p>{artifact.description}</p><a href={artifact.src} target="_blank" rel="noreferrer">Open full frame ↗</a></div></figcaption>
+                        </figure>
+                      ))}
+                    </div>
+                  </section>
+                )}
+
               </article>
-            ))}
-          </div>
-        </section>
-
-        <section className="crusoe-clean-section crusoe-he-section" aria-labelledby="crusoe-he-science-title">
-          <div className="crusoe-clean-heading">
-            <span>06 · Cognitive science</span>
-            <div>
-              <h3 id="crusoe-he-science-title">Explain why the friction matters—not only where it appears.</h3>
-              <p>Working memory, mental models, and error recovery helped connect interface details to how people process complex technical tasks under time pressure.</p>
-            </div>
-          </div>
-
-          <figure className="crusoe-he-artifact crusoe-he-artifact-wide">
-            <Image src="/images/crusoe/heuristic-cognitive-science.png" alt="Figma frame connecting working memory, mental models, and error recovery to interface design" width={1440} height={900} sizes="(max-width: 900px) 92vw, 86vw" />
-            <figcaption><span>Reasoning layer</span><strong>The cognitive mechanism behind the heuristic</strong></figcaption>
-          </figure>
-
-          <div className="crusoe-he-science-grid">
-            {heuristicScience.map(([title, body], index) => (
-              <article key={title}><span>0{index + 1}</span><h4>{title}</h4><p>{body}</p></article>
             ))}
           </div>
         </section>
 
         <section className="crusoe-clean-section crusoe-he-section" aria-labelledby="crusoe-he-output-title">
           <div className="crusoe-clean-heading">
-            <span>07 · Output</span>
+            <span>04 · Jira → shipped</span>
             <div>
-              <h3 id="crusoe-he-output-title">A shared backlog grounded in user consequence.</h3>
-              <p>The final case-study artifact translated the evaluation into a structure the team could use for prioritization, design exploration, and implementation planning.</p>
+              <h3 id="crusoe-he-output-title">I stayed involved until the improvements shipped.</h3>
+              <p>I wrote the priority findings as Jira tickets, set scope with engineers, answered questions during the build, and reviewed normal, loading, empty, and error states in QA.</p>
             </div>
           </div>
 
           <div className="crusoe-he-output-grid">
-            {heuristicDeliverables.map(([title, body], index) => (
+            {heuristicDelivery.map(([title, body], index) => (
               <article key={title}><span>0{index + 1}</span><h4>{title}</h4><p>{body}</p></article>
             ))}
           </div>
 
           <div className="crusoe-he-final-note">
-            <span>What changed</span>
-            <p>Each recommendation now connects a user task to a violated principle, its consequence, and a concrete design response.</p>
+            <span>Delivery model</span>
+            <p>Journey evidence → Jira scope → implementation support → QA → shipped change.</p>
           </div>
         </section>
       </section>
@@ -1082,32 +1392,189 @@ export default function CrusoeCaseStudy() {
       <section
         id="crusoe-panel-usage-to-cost"
         role="tabpanel"
-        aria-labelledby="crusoe-tab-usage-to-cost"
+        aria-label="Usage-to-cost project"
         className="crusoe-case-section project-section coral-section crusoe-project-panel"
       >
-        <div className="crusoe-section-label"><span>Project 03</span><strong>Intelligence Foundry usage-to-cost model</strong></div>
+        <div className="crusoe-section-label"><span>Project overview</span><strong>Usage, billing, and investigation</strong></div>
         <div className="crusoe-project-heading">
-          <h2>Connect infrastructure activity to the number on the invoice.</h2>
+          <h2>Show what AI usage costs and what caused the change.</h2>
           <p>
-            For Intelligence Foundry, I redesigned the relationship between operational usage and billing so users could
-            understand scope, trace costs, and investigate unexpected spend without losing context.
+            Intelligence Foundry lets developers use hosted AI models without managing the computers behind them. Text models
+            are billed by tokens, or pieces of processed text, while video models are billed by generation time. Teams needed
+            a simple way to connect those measurements to their bill.
           </p>
         </div>
 
-        <div className="crusoe-billing-levels">
-          {billingLevels.map(([number, title, body]) => (
-            <article key={number}>
-              <span>{number}</span>
-              <h3>{title}</h3>
+        <aside className="crusoe-cost-context" aria-label="Project challenge">
+          <span>The design challenge</span>
+          <p>
+            Usage, cost, and system activity appeared on separate screens. I connected them so a user could notice a change,
+            see which product and dates caused it, and inspect the requests or account changes behind it without restarting
+            the search on every screen.
+          </p>
+        </aside>
+
+        <div className="crusoe-cost-brief" aria-label="Usage-to-cost project summary">
+          {usageToCostOverview.map(([title, body]) => (
+            <article key={title}>
+              <span>{title}</span>
               <p>{body}</p>
             </article>
           ))}
         </div>
 
-        <div className="crusoe-visual-pair billing-visuals">
-          <VisualPlaceholder number="03A" title="Usage overview" note="Add the approved summary and scope controls" />
-          <VisualPlaceholder number="03B" title="Cost investigation" note="Add breakdown, detail, or invoice connection screens" />
+        <div className="crusoe-cost-journey" aria-label="Final usage-to-cost journey">
+          <span>Final journey</span>
+          <ol>
+            <li>Compare usage</li>
+            <li>Understand cost</li>
+            <li>Find the responsible product</li>
+            <li>Check what happened</li>
+          </ol>
         </div>
+
+        <section className="crusoe-clean-section crusoe-cost-section" aria-labelledby="crusoe-cost-problem-title">
+          <div className="crusoe-clean-heading">
+            <span>Before</span>
+            <div>
+              <h3 id="crusoe-cost-problem-title">The old flow showed that cost increased, but not why.</h3>
+              <p>Finding the cause required moving between four tools, rebuilding the same filters, and comparing charts, requests, and account changes by hand.</p>
+            </div>
+          </div>
+
+          <div className="crusoe-cost-flow crusoe-cost-before-flow" aria-label="Previous cost investigation workflow">
+            <span>Previous workflow</span>
+            <ol>
+              {usageToCostBeforeFlow.map((step) => <li key={step}>{step}</li>)}
+            </ol>
+          </div>
+
+          <div className="crusoe-cost-question-grid">
+            {usageToCostQuestions.map(([number, title, body]) => (
+              <article key={number}><span>{number}</span><h4>{title}</h4><p>{body}</p></article>
+            ))}
+          </div>
+
+          <div className="crusoe-cost-flow" aria-label="Usage-to-cost investigation model">
+            <span>Design response</span>
+            <ol>
+              <li>Notice a change</li>
+              <li>Find the responsible product</li>
+              <li>Check requests and account changes</li>
+              <li>Decide what to do next</li>
+            </ol>
+          </div>
+        </section>
+
+        <section className="crusoe-clean-section crusoe-cost-section" aria-labelledby="crusoe-cost-process-title">
+          <div className="crusoe-clean-heading">
+            <span>Process</span>
+            <div>
+              <h3 id="crusoe-cost-process-title">I mapped the questions first, then designed the screens.</h3>
+              <p>I started with the questions teams ask after noticing unexpected cost. Each screen answers one question, then carries the same project, model, and date range into the next step.</p>
+            </div>
+          </div>
+
+          <div className="crusoe-cost-process-grid">
+            {usageToCostProcess.map(([number, title, body]) => (
+              <article key={number}><span>{number}</span><div><h4>{title}</h4><p>{body}</p></div></article>
+            ))}
+          </div>
+
+          <aside className="crusoe-cost-constraint">
+            <span>Core design constraint</span>
+            <p>Tokens, video seconds, dollars, traffic, response time, and system events needed to connect without being presented as if they were the same measurement.</p>
+          </aside>
+        </section>
+
+        <section className="crusoe-clean-section crusoe-cost-section" aria-labelledby="crusoe-cost-usage-title">
+          <div className="crusoe-clean-heading">
+            <span>Design 01 · Compare usage</span>
+            <div>
+              <h3 id="crusoe-cost-usage-title">Use one clear layout for different types of usage.</h3>
+              <p>Text usage stays in tokens and video usage stays in seconds. Tabs let users switch between them while the dates, project, and chart behavior remain consistent.</p>
+            </div>
+          </div>
+
+          <CostMotionFigure
+            src="/crusoe/usage-compare-loop.mp4"
+            poster="/images/crusoe/usage-to-cost/usage-overview.jpg"
+            label="Prototype loop · usage"
+            title="Compare four measures without losing scope"
+            description="The loop shows the shared tab, period, chart, and hover behavior across each usage type."
+          />
+
+          <div className="crusoe-cost-rationale-grid">
+            {usageDesignNotes.map(([title, body]) => (
+              <article key={title}><h4>{title}</h4><p>{body}</p></article>
+            ))}
+          </div>
+        </section>
+
+        <section className="crusoe-clean-section crusoe-cost-section" aria-labelledby="crusoe-cost-billing-title">
+          <div className="crusoe-clean-heading">
+            <span>Design 02 · Explain spend</span>
+            <div>
+              <h3 id="crusoe-cost-billing-title">Show the change first, then explain the total.</h3>
+              <p>The page answers four questions in order: Did cost change? When? Which product caused it? What should the user inspect or do next?</p>
+            </div>
+          </div>
+
+          <CostMotionFigure
+            src="/crusoe/cost-breakdown-loop.mp4"
+            poster="/images/crusoe/usage-to-cost/billing-overview.jpg"
+            label="Prototype loop · billing"
+            title="Move from period change to product attribution"
+            description="The loop follows the billing hierarchy from current-versus-previous spend through daily cost and the products responsible for the total."
+          />
+
+          <div className="crusoe-cost-rationale-grid">
+            {costDesignNotes.map(([title, body]) => (
+              <article key={title}><h4>{title}</h4><p>{body}</p></article>
+            ))}
+          </div>
+        </section>
+
+        <section className="crusoe-clean-section crusoe-cost-section" aria-labelledby="crusoe-cost-investigation-title">
+          <div className="crusoe-clean-heading">
+            <span>Design 03 · Investigate the cause</span>
+            <div>
+              <h3 id="crusoe-cost-investigation-title">A bill increase now leads directly to its cause.</h3>
+              <p>“View analytics” shows how traffic and performance changed. Event logs and account history then reveal the requests, model updates, or user actions behind that pattern.</p>
+            </div>
+          </div>
+
+          <CostMotionFigure
+            src="/crusoe/cost-investigation-loop.mp4"
+            poster="/images/crusoe/usage-to-cost/operational-analytics.jpg"
+            label="Prototype loop · investigation"
+            title="Carry the question into analytics and logs"
+            description="The loop moves through workload metrics, request-level evidence, and activity history without breaking the investigation model."
+          />
+
+          <div className="crusoe-cost-rationale-grid">
+            {investigationDesignNotes.map(([title, body]) => (
+              <article key={title}><h4>{title}</h4><p>{body}</p></article>
+            ))}
+          </div>
+        </section>
+
+        <section className="crusoe-clean-section crusoe-cost-section" aria-labelledby="crusoe-cost-decisions-title">
+          <div className="crusoe-clean-heading">
+            <span>Outcome</span>
+            <div>
+              <h3 id="crusoe-cost-decisions-title">Each screen answers one question and leads to the next.</h3>
+              <p>The final flow helps users understand what they used, what it cost, which product caused the change, and what happened in the system at the same time.</p>
+            </div>
+          </div>
+
+          <div className="crusoe-cost-decision-grid">
+            {usageToCostDecisions.map(([title, body], index) => (
+              <article key={title}><span>0{index + 1}</span><h4>{title}</h4><p>{body}</p></article>
+            ))}
+          </div>
+
+        </section>
       </section>
         )}
       </section>
@@ -1116,10 +1583,10 @@ export default function CrusoeCaseStudy() {
         <div className="crusoe-section-label"><span>04 · Collaboration</span><strong>Designing across the system</strong></div>
         <div className="crusoe-collaboration-grid">
           <div>
-            <h2>Shared early. Refined together. Built for handoff.</h2>
+            <h2>Frequent reviews kept the work clear and buildable.</h2>
             <p>
-              Across the internship, I partnered with design, product, engineering, brand, and technical writing. The work
-              moved through audits, working sessions, critiques, implementation conversations, and iterative visual refinement.
+              I worked with design, product, engineering, brand, and technical writing throughout the internship. We reviewed
+              problems early, agreed on scope, refined the experience together, and documented decisions before handoff.
             </p>
           </div>
           <aside className="crusoe-collaboration-artifact" aria-label="Cross-functional collaboration process">
@@ -1141,18 +1608,18 @@ export default function CrusoeCaseStudy() {
                 </li>
               ))}
             </ol>
-            <footer>Each pass made the product decision—and the handoff—clearer.</footer>
+            <footer>Each review made the product decision and the final handoff clearer.</footer>
           </aside>
         </div>
       </section>
 
       <section className="crusoe-case-section crusoe-outcomes-section">
-        <div className="crusoe-section-label"><span>05 · Outcomes</span><strong>What the internship produced</strong></div>
+        <div className="crusoe-section-label"><span>05 · Outcomes</span></div>
         <div className="crusoe-outcomes-heading">
-          <h2>Clearer product moments and clearer paths for the team.</h2>
+          <h2>Clearer experiences for customers and clearer plans for the team.</h2>
           <p>
-            The work established concrete improvements for the current Console while giving the team reusable systems
-            and future directions that could extend beyond a single screen or release.
+            The internship produced improvements the team could ship now, reusable patterns for future work, and clear
+            documentation for larger ideas that needed more time.
           </p>
         </div>
         <div className="crusoe-outcomes-grid">
@@ -1170,9 +1637,9 @@ export default function CrusoeCaseStudy() {
         <p className="crusoe-eyebrow">06 · Reflection</p>
         <h2>What I&apos;m taking with me.</h2>
         <div className="crusoe-reflection-grid">
-          <article><span>01</span><p>Designing infrastructure products means making scope, state, and consequence visible at every step.</p></article>
-          <article><span>02</span><p>A good system leaves room for an implementable first version and a more ambitious future direction.</p></article>
-          <article><span>03</span><p>Cross-functional clarity is part of the product. The artifact has to help the team make decisions, too.</p></article>
+          <article><span>01</span><p>Infrastructure products feel easier when users can always see what they selected, what the system is doing, and what will happen next.</p></article>
+          <article><span>02</span><p>A strong first release can solve the immediate problem while still leaving a clear path for a more ambitious version.</p></article>
+          <article><span>03</span><p>Design documentation should help the team understand the decision, not only show the final screen.</p></article>
         </div>
       </section>
 

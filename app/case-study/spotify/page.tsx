@@ -4,7 +4,8 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
-import CaseStudyCover from '@/components/CaseStudyCover'
+import EditorialCaseStudyCover from '@/components/EditorialCaseStudyCover'
+import ViewportVideo from '@/components/ViewportVideo'
 
 interface Particle {
   id: number;
@@ -114,17 +115,40 @@ export default function SpotifyCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
-      <CaseStudyCover
-        title="Spotify Threads"
-        eyebrow="Music memory concept"
-        description="A concept for rediscovering songs by mood, memory, and the little stories attached to what you play."
-        image="/spotify/spotify-1.png"
+      <EditorialCaseStudyCover
         accent="mint"
-        tags={['listening memory', 'mood discovery', 'music with context']}
+        eyebrow="Spotify Threads · Music memory concept"
+        headline="Rediscover music through the life around it."
+        description="I reimagined music discovery around mood, memory, and the personal context attached to what people play—not another feed of disconnected recommendations."
+        meta={[
+          ['Role', 'UX Designer'],
+          ['Timeline', '2 weeks'],
+          ['Platform', 'Mobile · iOS'],
+          ['Focus', 'Listening memory and meaningful discovery'],
+        ]}
       />
 
+      <section className="spotify-single-device" aria-label="Spotify Threads prototype preview">
+        <div className="spotify-single-device-inner">
+          <div className="spotify-single-device-copy">
+            <p>Final interaction</p>
+            <h2>One clean view of the listening experience.</h2>
+            <span>
+              The prototype keeps the phone upright and lets the interface carry the story. No extra frames, overlap, or decorative device clutter.
+            </span>
+          </div>
+          <div className="spotify-single-device-media">
+            <ViewportVideo
+              sources={[{ src: '/spotify/spotify-phone-prototype.webm', type: 'video/webm' }]}
+              ariaLabel="Spotify Threads interactive phone prototype"
+              poster="/spotify/spotify-1.png"
+            />
+          </div>
+        </div>
+      </section>
+
       {/* Hero Section */}
-      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" hidden aria-hidden="true" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -198,7 +222,7 @@ export default function SpotifyCaseStudy() {
       </section>
 
       {/* Overview Section */}
-      <Section>
+      <Section id="case-study-content">
         <SectionLabel>01</SectionLabel>
         <SectionTitle>Overview</SectionTitle>
         <div className="max-w-3xl">
@@ -399,22 +423,64 @@ export default function SpotifyCaseStudy() {
           </p>
         </div>
 
-        <div className="mb-20">
-          <div className="mb-8 flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
-            <div>
-              <h3 className="text-xl md:text-2xl font-semibold text-[#1db954]">Research Sessions</h3>
-              <p className="mt-2 max-w-xl text-sm leading-relaxed text-white/45">
-                Six conversations helped surface the habits, memories, and frustrations behind everyday listening.
-              </p>
+        <div className="mb-20 overflow-hidden rounded-[2rem] border border-[#1db954]/20 bg-gradient-to-br from-[#1db954]/[0.09] via-white/[0.025] to-transparent p-6 md:p-10">
+          <div className="mb-10 flex flex-col gap-4 border-b border-white/10 pb-8 md:flex-row md:items-end md:justify-between">
+            <div className="max-w-2xl">
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.24em] text-[#1db954]">Research framework</p>
+              <h3 className="text-2xl font-semibold text-white/90 md:text-3xl">Three questions shaped the concept.</h3>
             </div>
-            <p className="text-xs uppercase tracking-[0.2em] text-white/30">Recorded interviews</p>
+            <p className="max-w-sm text-sm leading-relaxed text-white/45">
+              The goal was to understand where music loses meaning between discovery, saving, and returning.
+            </p>
+          </div>
+
+          <div className="grid gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10 md:grid-cols-3">
+            {[
+              {
+                number: '01',
+                title: 'Return',
+                question: 'What makes someone revisit a song after saving it?',
+                focus: 'Saved-library behavior',
+              },
+              {
+                number: '02',
+                title: 'Context',
+                question: 'What makes a recommendation feel personally relevant?',
+                focus: 'Trust and explanation',
+              },
+              {
+                number: '03',
+                title: 'Intention',
+                question: 'When does listening feel active instead of automatic?',
+                focus: 'Mood and motivation',
+              },
+            ].map((item) => (
+              <article key={item.number} className="flex min-h-56 flex-col bg-[#080a09] p-6 md:p-7">
+                <div className="mb-10 flex items-center justify-between">
+                  <span className="font-mono text-xs text-[#1db954]">{item.number}</span>
+                  <span className="rounded-full border border-white/10 px-3 py-1 text-[0.65rem] uppercase tracking-[0.16em] text-white/35">{item.focus}</span>
+                </div>
+                <h4 className="mb-3 text-lg font-medium text-white/85">{item.title}</h4>
+                <p className="mt-auto text-sm leading-relaxed text-white/50">{item.question}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+
+        <section className="mb-20" aria-labelledby="spotify-research-sessions-title">
+          <div className="mb-8 flex flex-col gap-3 border-b border-white/10 pb-6 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="mb-3 text-xs font-medium uppercase tracking-[0.22em] text-white/30">Recorded interviews</p>
+              <h3 id="spotify-research-sessions-title" className="text-xl font-semibold text-[#1db954] md:text-2xl">Six conversations behind the concept</h3>
+            </div>
+            <p className="max-w-md text-sm leading-relaxed text-white/45">The original research sessions show how everyday listening habits, memories, and frustrations informed the final direction.</p>
           </div>
 
           <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
             {researchSessions.map((session) => (
-              <figure key={session.src} className="group overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-2">
+              <figure key={session.src} className="overflow-hidden rounded-2xl border border-white/10 bg-white/[0.035] p-2">
                 <video
-                  className="aspect-[16/9] w-full rounded-xl bg-[#101010] object-cover"
+                  className="aspect-video w-full rounded-xl bg-[#101010] object-contain"
                   src={session.src}
                   controls
                   playsInline
@@ -427,12 +493,15 @@ export default function SpotifyCaseStudy() {
               </figure>
             ))}
           </div>
-        </div>
+        </section>
 
         {/* User Surveys */}
-        <div className="mb-8">
-          <h3 className="text-xl md:text-2xl font-semibold text-[#1db954] mb-8">User Surveys</h3>
-          <p className="text-white/40 text-sm mb-12">Survey sample: n = 24 Spotify users</p>
+        <div className="mb-12 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+          <div>
+            <p className="mb-3 text-xs font-medium uppercase tracking-[0.22em] text-white/30">Survey synthesis</p>
+            <h3 className="text-xl font-semibold text-[#1db954] md:text-2xl">What listeners told me</h3>
+          </div>
+          <p className="w-fit rounded-full border border-white/10 px-4 py-2 text-xs text-white/45">24 Spotify users</p>
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-10 lg:gap-8">
@@ -587,7 +656,7 @@ export default function SpotifyCaseStudy() {
           <p className="text-white/40 text-sm mb-6">Synthesizing Research Insights</p>
           
           <p className="text-white/50 leading-relaxed max-w-3xl mb-8">
-            I organized survey responses and interview notes into an affinity map. Three core themes emerged around how users want to reconnect with their music:
+            I organized the survey responses into an affinity map. Three themes emerged around how listeners want to reconnect with their music:
           </p>
           
           <div className="max-w-3xl mb-12 space-y-3">
@@ -1626,9 +1695,9 @@ export default function SpotifyCaseStudy() {
       {/* Reflection */}
       <Section>
         <SectionLabel>11</SectionLabel>
-        <SectionTitle>Reflection</SectionTitle>
+      <SectionTitle>Reflection</SectionTitle>
         
-        <div className="max-w-3xl">
+        <div className="legacy-reflection-content max-w-3xl">
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div>
               <h3 className="text-[#1db954] font-medium mb-3">What I Learned</h3>
@@ -1777,7 +1846,7 @@ export default function SpotifyCaseStudy() {
   )
 }
 
-function Section({ children }: { children: React.ReactNode }) {
+function Section({ children, id }: { children: React.ReactNode; id?: string }) {
   const ref = useRef<HTMLElement>(null)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -1807,7 +1876,8 @@ function Section({ children }: { children: React.ReactNode }) {
   return (
     <section 
       ref={ref}
-      className={`relative py-16 md:py-24 px-4 md:px-8 border-t border-white/5 transition-all duration-1000 ease-out ${
+      id={id}
+      className={`legacy-case-section relative py-16 md:py-24 px-4 md:px-8 border-t border-white/5 transition-all duration-1000 ease-out ${
         isVisible 
           ? 'opacity-100 translate-y-0' 
           : 'opacity-0 translate-y-12'
@@ -1822,12 +1892,12 @@ function Section({ children }: { children: React.ReactNode }) {
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
   return (
-    <p className="text-[#1db954]/60 text-sm font-mono mb-4">{children}</p>
+    <p className="legacy-section-number text-[#1db954]/60 text-sm font-mono mb-4">{children}</p>
   )
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return (
-    <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{children}</h2>
+    <h2 className="legacy-section-title text-3xl md:text-4xl font-bold text-white mb-12">{children}</h2>
   )
 }

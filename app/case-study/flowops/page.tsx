@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
-import CaseStudyCover from '@/components/CaseStudyCover'
+import EditorialCaseStudyCover from '@/components/EditorialCaseStudyCover'
 
 interface Particle {
   id: number;
@@ -107,17 +107,21 @@ export default function FlowOpsCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
-      <CaseStudyCover
-        title="FlowOps"
-        eyebrow="B2B workflow system"
-        description="Enterprise requests, approvals, roles, and messy internal ops made readable enough for real teams."
-        image="/flowops1.png"
+      <EditorialCaseStudyCover
         accent="orange"
-        tags={['clean handoffs', 'role clarity', 'less waiting']}
+        eyebrow="FlowOps · B2B workflow system"
+        headline="Make complex requests easier to move forward."
+        description="I designed an enterprise request system that clarifies roles, approvals, handoffs, and status without flattening the complexity real operations teams need."
+        meta={[
+          ['Role', 'Product Designer'],
+          ['Timeline', '2 weeks'],
+          ['Deliverable', 'High-fidelity prototype'],
+          ['Focus', 'Workflow and decision clarity'],
+        ]}
       />
 
       {/* Hero Section */}
-      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" hidden aria-hidden="true" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -248,7 +252,7 @@ export default function FlowOpsCaseStudy() {
       </section>
 
       {/* Problem & Context */}
-      <Section>
+      <Section id="case-study-content">
         <SectionLabel>01</SectionLabel>
         <SectionTitle>Problem & Context</SectionTitle>
         <div className="max-w-4xl">
@@ -1472,12 +1476,12 @@ export default function FlowOpsCaseStudy() {
       {/* Reflection & What's Next */}
       <Section>
         <SectionLabel>10</SectionLabel>
-        <SectionTitle>Reflection & What's Next</SectionTitle>
+      <SectionTitle>Reflection & What's Next</SectionTitle>
         <p className="text-white/50 leading-relaxed max-w-3xl mb-12">
           Every project teaches something. Here's what I'm taking forward.
         </p>
         
-        <div className="max-w-4xl">
+        <div className="legacy-reflection-content max-w-4xl">
           <div className="grid md:grid-cols-3 gap-8 mb-12">
             <div>
               <h3 className="text-[#ef4444] font-medium mb-4">What I Learned</h3>
@@ -1820,7 +1824,7 @@ export default function FlowOpsCaseStudy() {
   )
 }
 
-function Section({ children }: { children: React.ReactNode }) {
+function Section({ children, id }: { children: React.ReactNode; id?: string }) {
   const ref = useRef<HTMLElement>(null)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -1842,7 +1846,8 @@ function Section({ children }: { children: React.ReactNode }) {
   return (
     <section 
       ref={ref}
-      className={`relative py-16 md:py-24 px-4 md:px-8 border-t border-white/5 transition-all duration-1000 ease-out ${
+      id={id}
+      className={`legacy-case-section relative py-16 md:py-24 px-4 md:px-8 border-t border-white/5 transition-all duration-1000 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -1852,9 +1857,9 @@ function Section({ children }: { children: React.ReactNode }) {
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="text-[#ef4444]/60 text-sm font-mono mb-4">{children}</p>
+  return <p className="legacy-section-number text-[#ef4444]/60 text-sm font-mono mb-4">{children}</p>
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{children}</h2>
+  return <h2 className="legacy-section-title text-3xl md:text-4xl font-bold text-white mb-12">{children}</h2>
 }

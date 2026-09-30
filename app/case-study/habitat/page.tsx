@@ -4,7 +4,8 @@ import { useEffect, useState, useMemo, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import CaseStudyNav from '@/components/CaseStudyNav'
-import CaseStudyCover from '@/components/CaseStudyCover'
+import EditorialCaseStudyCover from '@/components/EditorialCaseStudyCover'
+import ViewportVideo from '@/components/ViewportVideo'
 
 interface Particle {
   id: number;
@@ -83,17 +84,21 @@ export default function HabitatCaseStudy() {
 
       <CaseStudyNav showBackButton={showBackButton} />
 
-      <CaseStudyCover
-        title="HABITat"
-        eyebrow="Mobile behavior design"
-        description="A habit app that treats consistency like a little world you get to grow, not a chore you have to survive."
-        image="/habitat/habitat-hero.png"
+      <EditorialCaseStudyCover
         accent="green"
-        tags={['tiny rewards', 'habit loops', 'growing world']}
+        eyebrow="HABITat · Mobile behavior design"
+        headline="Turn consistency into a world worth growing."
+        description="I designed a habit experience for college students that uses progress, small rewards, and a growing habitat to make returning feel encouraging rather than punitive."
+        meta={[
+          ['Role', 'UX Designer'],
+          ['Timeline', '4-week sprint'],
+          ['Team', '4 designers'],
+          ['Recognition', 'Most User-Centered Design'],
+        ]}
       />
 
       {/* Hero Section */}
-      <section id="case-study-detail" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
+      <section id="case-study-detail" hidden aria-hidden="true" className="relative min-h-screen flex items-center px-4 md:px-8 pt-32 pb-20">
         <div className="max-w-7xl mx-auto w-full">
           <div className="grid lg:grid-cols-2 gap-12 lg:gap-16 items-center">
             {/* Left side - Title and info */}
@@ -158,7 +163,7 @@ export default function HabitatCaseStudy() {
       </section>
 
       {/* Overview Section */}
-      <Section>
+      <Section id="case-study-content">
         <SectionLabel>01</SectionLabel>
         <SectionTitle>Overview</SectionTitle>
         <div className="max-w-3xl">
@@ -858,9 +863,9 @@ export default function HabitatCaseStudy() {
       {/* Team & Reflection */}
       <Section>
         <SectionLabel>10</SectionLabel>
-        <SectionTitle>Reflection</SectionTitle>
+      <SectionTitle>Reflection</SectionTitle>
         
-        <div className="max-w-3xl">
+        <div className="legacy-reflection-content max-w-3xl">
           <div className="flex flex-wrap gap-3 mb-12">
             {['Deepa Bhat', 'Anusha Ramachandran', 'Vaishnavi Chandrapati', 'Aaron Foronda'].map((name) => (
               <span 
@@ -919,17 +924,12 @@ export default function HabitatCaseStudy() {
           </p>
 
           <div className="relative aspect-video rounded-2xl overflow-hidden border border-white/10 bg-black">
-            <video 
+            <ViewportVideo
               className="w-full h-full object-contain"
+              sources={[{ src: '/habitat/habitat-demo.mp4', type: 'video/mp4' }]}
+              ariaLabel="HABITat product walkthrough"
               controls
-              autoPlay
-              muted
-              loop
-              playsInline
-            >
-              <source src="/habitat/habitat-demo.mp4" type="video/mp4" />
-              Your browser does not support the video tag.
-            </video>
+            />
           </div>
         </div>
       </Section>
@@ -960,7 +960,7 @@ export default function HabitatCaseStudy() {
   )
 }
 
-function Section({ children }: { children: React.ReactNode }) {
+function Section({ children, id }: { children: React.ReactNode; id?: string }) {
   const ref = useRef<HTMLElement>(null)
   const [isVisible, setIsVisible] = useState(false)
 
@@ -982,7 +982,8 @@ function Section({ children }: { children: React.ReactNode }) {
   return (
     <section 
       ref={ref}
-      className={`relative py-16 md:py-24 px-4 md:px-8 border-t border-white/5 transition-all duration-1000 ease-out ${
+      id={id}
+      className={`legacy-case-section relative py-16 md:py-24 px-4 md:px-8 border-t border-white/5 transition-all duration-1000 ease-out ${
         isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'
       }`}
     >
@@ -992,9 +993,9 @@ function Section({ children }: { children: React.ReactNode }) {
 }
 
 function SectionLabel({ children }: { children: React.ReactNode }) {
-  return <p className="text-[#f97316]/60 text-sm font-mono mb-4">{children}</p>
+  return <p className="legacy-section-number text-[#f97316]/60 text-sm font-mono mb-4">{children}</p>
 }
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
-  return <h2 className="text-3xl md:text-4xl font-bold text-white mb-12">{children}</h2>
+  return <h2 className="legacy-section-title text-3xl md:text-4xl font-bold text-white mb-12">{children}</h2>
 }
