@@ -314,7 +314,7 @@ export default function HousePortfolio() {
         <nav className="dani-nav" aria-label="Primary navigation">
           <div className="dani-nav-menu">
             <a href="#work" className="is-current">Works</a>
-            <Link href="/about">About me</Link>
+            <a href="#about">About me</a>
             <a
               href="/Anusha_Ramachandran_Resume.pdf"
               target="_blank"
@@ -532,7 +532,7 @@ export default function HousePortfolio() {
         </div>
       </section>
 
-      <section className="behind-pixels">
+      <section id="about" className="behind-pixels">
         <div className="behind-heading">
           <h2>A little about me</h2>
           <p className="home-single-line">The perspective and small things that shape my work.</p>
