@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
+import ViewportVideo from '@/components/ViewportVideo'
 
 type VisualPlaceholderProps = {
   number: string
@@ -30,42 +31,19 @@ type CostMotionFigureProps = {
   label: string
   title: string
   description: string
+  startAt?: number
 }
 
-function CostMotionFigure({ src, poster, label, title, description }: CostMotionFigureProps) {
-  const videoRef = useRef<HTMLVideoElement>(null)
-  const mediaRef = useRef<HTMLDivElement>(null)
-
-  useEffect(() => {
-    const video = videoRef.current
-    const media = mediaRef.current
-    if (!video || !media || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    let isVisible = false
-    const syncPlayback = () => {
-      if (isVisible) void video.play().catch(() => undefined)
-      else video.pause()
-    }
-
-    const observer = new IntersectionObserver(([entry]) => {
-      isVisible = entry.intersectionRatio >= 0.95
-      syncPlayback()
-    }, { threshold: [0, 0.95] })
-
-    video.addEventListener('canplay', syncPlayback)
-    observer.observe(media)
-    return () => {
-      video.removeEventListener('canplay', syncPlayback)
-      observer.disconnect()
-    }
-  }, [])
-
+function CostMotionFigure({ src, poster, label, title, description, startAt }: CostMotionFigureProps) {
   return (
     <figure className="crusoe-cost-figure crusoe-cost-figure-wide crusoe-cost-motion-figure">
-      <div ref={mediaRef} className="crusoe-cost-media">
-        <video ref={videoRef} muted loop playsInline preload="metadata" poster={poster} aria-label={`${title} interaction walkthrough`}>
-          <source src={src} type="video/mp4" />
-        </video>
+      <div className="crusoe-cost-media">
+        <ViewportVideo
+          sources={[{ src, type: 'video/mp4' }]}
+          poster={poster}
+          ariaLabel={`${title} interaction walkthrough`}
+          startAt={startAt}
+        />
       </div>
       <figcaption>
         <span>{label}</span>
@@ -1084,7 +1062,10 @@ export default function CrusoeCaseStudy() {
           <div className="crusoe-motion-grid crusoe-clean-motion-grid">
             {finalEmptyStateVideos.map(([title, src, description]) => (
               <figure key={src}>
-                <video src={src} autoPlay muted loop playsInline preload="metadata" aria-label={`${title} empty state walkthrough`} />
+                <ViewportVideo
+                  sources={[{ src, type: 'video/mp4' }]}
+                  ariaLabel={`${title} empty state walkthrough`}
+                />
                 <figcaption><strong>{title}</strong><span>{description}</span></figcaption>
               </figure>
             ))}
@@ -1499,6 +1480,7 @@ export default function CrusoeCaseStudy() {
           <CostMotionFigure
             src="/crusoe/usage-compare-loop.mp4"
             poster="/images/crusoe/usage-to-cost/usage-overview.jpg"
+            startAt={3}
             label="Prototype loop · usage"
             title="Compare four measures without losing scope"
             description="The loop shows the shared tab, period, chart, and hover behavior across each usage type."

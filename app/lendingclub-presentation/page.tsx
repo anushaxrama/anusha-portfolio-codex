@@ -934,6 +934,7 @@ function ProjectWalkthrough({
                       key={activeVisual.src}
                       className="aspect-video w-full"
                       controls
+                      loop
                       playsInline
                       preload="metadata"
                     >

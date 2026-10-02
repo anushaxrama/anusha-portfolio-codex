@@ -18,6 +18,7 @@ type Project = {
   tone: string
   stat: string
   crop: string
+  singlePhone?: boolean
   placeholder?: boolean
   placeholderLabel?: string
   placeholderTitle?: string
@@ -26,7 +27,7 @@ type Project = {
 
 type ShowcaseSlide = {
   title: string
-  href: string
+  href?: string
   alt: string
   format: 'portrait' | 'square' | 'landscape'
   image?: string
@@ -39,7 +40,8 @@ type ShowcaseSlide = {
   framing?: 'roomy' | 'tight'
   motion?: 'afterglow'
   composition?: 'frameless'
-  playbackRate?: number
+  art?: 'orbit-bloom' | 'manifesto' | 'signal-field'
+  variant?: 'spotify' | 'crusoe' | 'habitat'
 }
 
 const projects: Project[] = [
@@ -113,7 +115,7 @@ const projects: Project[] = [
     category: 'Mobile · Behavior',
     description: 'A habit tracker built around streaks, tiny rewards, and a virtual habitat that grows with you.',
     href: '/case-study/habitat',
-    image: '/habitat/habitat-hero.png',
+    image: '/habitat/hero-phones.jpeg',
     alt: 'HABITat app preview',
     secondaryAlt: 'HABITat home dashboard',
     tone: 'green',
@@ -127,7 +129,7 @@ const projects: Project[] = [
     href: '/case-study/spotify',
     image: '/spotify/spotify-1.png',
     alt: 'Spotify Threads single-phone prototype',
-    previewVideo: '/spotify/spotify-phone-prototype.webm',
+    singlePhone: true,
     secondaryAlt: 'Spotify Threads listening memory screen',
     tone: 'mint',
     stat: 'Music memory',
@@ -147,6 +149,14 @@ const showcaseSlides: ShowcaseSlide[] = [
     framing: 'roomy',
   },
   {
+    title: 'Orbital bloom · Motion study',
+    alt: 'Animated orbital bloom visual study',
+    format: 'portrait',
+    tone: 'ink',
+    presentation: 'full',
+    art: 'orbit-bloom',
+  },
+  {
     title: 'NeuraNote · Product reel',
     href: '/case-study/neuranote',
     video: '/neuranote/neuranote-showcase-borderless-wide.mp4',
@@ -154,12 +164,10 @@ const showcaseSlides: ShowcaseSlide[] = [
     format: 'landscape',
     tone: 'lilac',
     presentation: 'inset',
-    composition: 'frameless',
     framing: 'tight',
   },
   {
     title: 'Visual study · Afterglow',
-    href: '/garden',
     image: '/images/inspiration/cosmic-figures.jpg',
     alt: 'Dreamlike cosmic artwork with three glowing figures',
     format: 'portrait',
@@ -170,35 +178,68 @@ const showcaseSlides: ShowcaseSlide[] = [
     motion: 'afterglow',
   },
   {
+    title: 'Spotify Threads · Listening memory',
+    href: '/case-study/spotify',
+    image: '/spotify/spotify-1.png',
+    alt: 'Spotify Threads listening-memory mobile interface',
+    format: 'portrait',
+    fit: 'contain',
+    position: 'center',
+    tone: 'ink',
+    presentation: 'inset',
+    framing: 'tight',
+    variant: 'spotify',
+  },
+  {
+    title: 'Signal field · Generative motion',
+    alt: 'Animated RGB signal field visual experiment',
+    format: 'square',
+    tone: 'ink',
+    presentation: 'full',
+    art: 'signal-field',
+  },
+  {
     title: 'Crusoe · Kubernetes',
     href: '/case-study/crusoe',
     video: '/crusoe/empty-state-kubernetes.mp4',
     alt: 'Crusoe Console Kubernetes empty state walkthrough',
     format: 'landscape',
-    tone: 'sage',
+    tone: 'ink',
     presentation: 'inset',
     framing: 'tight',
+    variant: 'crusoe',
   },
   {
-    title: 'Interface study · Table for one',
-    href: '/garden',
-    image: '/images/inspiration/food-app-concept.jpg',
-    alt: 'Colorful restaurant and food delivery mobile interface concept',
-    format: 'portrait',
+    title: 'Clear, useful, human · Visual identity study',
+    alt: 'Layered gradient typography visual identity study',
+    format: 'landscape',
+    tone: 'sky',
+    presentation: 'full',
+    art: 'manifesto',
+  },
+  {
+    title: 'Nexus · Multi-model workspace',
+    href: '/case-study/nexus',
+    image: '/narbl/narbl-1.png',
+    alt: 'Nexus AI research workspace landing experience',
+    format: 'landscape',
     fit: 'contain',
     position: 'center',
-    tone: 'citrus',
-    presentation: 'full',
+    tone: 'ink',
+    presentation: 'inset',
+    framing: 'tight',
+    variant: 'habitat',
   },
   {
     title: 'HABITat',
     href: '/case-study/habitat',
-    image: '/habitat/habitat-hero.png',
+    image: '/habitat/hero-phones.jpeg',
     alt: 'HABITat mobile app shown in transparent phone frames',
     format: 'landscape',
     fit: 'contain',
-    tone: 'mint',
+    tone: 'ink',
     presentation: 'inset',
+    framing: 'tight',
   },
 ]
 
@@ -208,9 +249,9 @@ const supportTabs = [
   { image: '/tonipr/site-hero.jpg', alt: 'ToniPR storytelling platform', tone: 'tab-pink' },
   { image: '/images/crusoe/final-instances-provisioning.png', alt: 'Crusoe Console provisioning experience', tone: 'tab-stone' },
   { image: '/narbl/narbl-4.png', alt: 'Nexus AI research interface', tone: 'tab-ink' },
-  { image: '/images/inspiration/food-app-concept.jpg', alt: 'Playful food app visual concept', tone: 'tab-lime' },
+  { image: '/flowops/flowops-requests.png', alt: 'FlowOps request-management workspace', tone: 'tab-lime' },
   { image: '/neuranote/neuranote-1.png', alt: 'NeuraNote learning experience', tone: 'tab-sky' },
-  { image: '/habitat/habitat-hero.png', alt: 'HABITat mobile experience', tone: 'tab-green' },
+  { image: '/habitat/hero-phones.jpeg', alt: 'HABITat mobile experience', tone: 'tab-green' },
   { image: '/images/inspiration/cosmic-figures.jpg', alt: 'Afterglow visual study', tone: 'tab-blue' },
   { image: '/spotify/spotify-1.png', alt: 'Spotify Threads listening experience', tone: 'tab-mist' },
 ]
@@ -220,6 +261,44 @@ const supportColumns = [
   ['Motion Design', 'Prototyping', 'Visual Identity'],
   ['AI Interfaces', 'UX Research', 'Storytelling'],
 ]
+
+function ShowcaseArt({ kind }: { kind: NonNullable<ShowcaseSlide['art']> }) {
+  if (kind === 'orbit-bloom') {
+    return (
+      <span className="showcase-art orbit-bloom" aria-hidden="true">
+        <span className="orbit-stars" />
+        <span className="orbit-flower">
+          <i /><i /><i /><i /><i /><i />
+        </span>
+        <span className="orbit-horizon" />
+      </span>
+    )
+  }
+
+  if (kind === 'manifesto') {
+    return (
+      <span className="showcase-art manifesto-study" aria-hidden="true">
+        <span className="manifesto-glow" />
+        <span className="manifesto-layer manifesto-layer-back" />
+        <span className="manifesto-layer manifesto-layer-middle" />
+        <span className="manifesto-panel">
+          <span className="manifesto-words">Clear.<br />Useful.<br />Human.</span>
+          <strong>make it click.</strong>
+        </span>
+      </span>
+    )
+  }
+
+  return (
+    <span className="showcase-art signal-field" aria-hidden="true">
+      <span className="signal-grid" />
+      <span className="signal-glow" />
+      <span className="signal-bars">
+        {Array.from({ length: 17 }, (_, index) => <i key={index} />)}
+      </span>
+    </span>
+  )
+}
 
 export default function HousePortfolio() {
   const workStripRef = useRef<HTMLDivElement>(null)
@@ -242,8 +321,8 @@ export default function HousePortfolio() {
     let frame = 0
     let lastTime = now()
     let offset = 0
-    const normalSpeed = 44
-    const hoverSpeed = 24
+    const normalSpeed = 30
+    const hoverSpeed = 8
     let speed = normalSpeed
     let targetSpeed = normalSpeed
     let loopWidth = 0
@@ -361,9 +440,6 @@ export default function HousePortfolio() {
       </div>
 
       <section id="work" className="digital-home">
-        <div className="section-doodle section-shirt" aria-hidden="true">
-          <span />
-        </div>
         <h2>Step into my digital home</h2>
         <div
           ref={workStripRef}
@@ -373,26 +449,16 @@ export default function HousePortfolio() {
           <div ref={workTrackRef} className="work-track">
             {loopedShowcaseSlides.map((slide, index) => {
               const isDuplicate = index >= showcaseSlides.length
-              return (
-                <article
-                  key={`${slide.title}-${index}`}
-                  className={`home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.motion ? ` showcase-motion-${slide.motion}` : ''}${slide.composition ? ` showcase-${slide.composition}` : ''}`}
-                  aria-hidden={isDuplicate}
-                  aria-label={slide.title}
-                >
+              const cardClassName = `home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.motion ? ` showcase-motion-${slide.motion}` : ''}${slide.composition ? ` showcase-${slide.composition}` : ''}${slide.variant ? ` showcase-${slide.variant}` : ''}`
+              const cardContents = (
+                <>
                   <span className="showcase-media">
-                    {slide.video ? (
-                      <video
-                        src={slide.video}
-                        aria-label={slide.alt}
-                        autoPlay
-                        loop
-                        muted
-                        playsInline
-                        preload="auto"
-                        onLoadedMetadata={(event) => {
-                          event.currentTarget.playbackRate = slide.playbackRate ?? 1
-                        }}
+                    {slide.art ? (
+                      <ShowcaseArt kind={slide.art} />
+                    ) : slide.video ? (
+                      <ViewportVideo
+                        sources={[{ src: slide.video, type: 'video/mp4' }]}
+                        ariaLabel={slide.alt}
                       />
                     ) : slide.image ? (
                       <Image
@@ -407,7 +473,28 @@ export default function HousePortfolio() {
                       />
                     ) : null}
                   </span>
-                </article>
+                </>
+              )
+
+              return slide.href ? (
+                <Link
+                  key={`${slide.title}-${index}`}
+                  href={slide.href}
+                  className={cardClassName}
+                  aria-hidden={isDuplicate}
+                  aria-label={`View ${slide.title}`}
+                  tabIndex={isDuplicate ? -1 : undefined}
+                >
+                  {cardContents}
+                </Link>
+              ) : (
+                <div
+                  key={`${slide.title}-${index}`}
+                  className={cardClassName}
+                  aria-hidden="true"
+                >
+                  {cardContents}
+                </div>
               )
             })}
           </div>
@@ -455,7 +542,7 @@ export default function HousePortfolio() {
               <div className="case-feature-card">
                 <div className="case-preview">
                   <div className="case-pattern" />
-                  <div className={`case-image main-shot${project.previewVideo ? ' single-phone-shot' : ''}`}>
+                  <div className={`case-image main-shot${project.previewVideo || project.singlePhone ? ' single-phone-shot' : ''}`}>
                     {project.previewVideo ? (
                       <ViewportVideo
                         sources={[{ src: project.previewVideo, type: 'video/webm' }]}
@@ -517,7 +604,6 @@ export default function HousePortfolio() {
                 <Image src={tab.image} alt={tab.alt} fill sizes="160px" className="object-cover" />
               </div>
             ))}
-            <div className="support-note">Let’s make it resonate.</div>
           </div>
         </div>
 
@@ -611,6 +697,18 @@ export default function HousePortfolio() {
           <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">linkedIn</a>
         </div>
       </footer>
+
+      <section className="flower-finale" aria-label="A closing design thought">
+        <p>Good design makes complex things feel naturally clear.</p>
+        <div className="flower-finale-grid" aria-hidden="true">
+          {Array.from({ length: 30 }, (_, flowerIndex) => (
+            <span className="flower-finale-mark" key={flowerIndex}>
+              {Array.from({ length: 6 }, (_, petalIndex) => <i key={petalIndex} />)}
+              <strong />
+            </span>
+          ))}
+        </div>
+      </section>
 
       <a className="floating-chat" href="mailto:arama@ucdavis.edu" aria-label="Email Anusha">
         <span />

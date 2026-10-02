@@ -483,6 +483,7 @@ export default function SpotifyCaseStudy() {
                   className="aspect-video w-full rounded-xl bg-[#101010] object-contain"
                   src={session.src}
                   controls
+                  loop
                   playsInline
                   preload="metadata"
                 />
