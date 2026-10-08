@@ -119,7 +119,7 @@ export default function SpotifyCaseStudy() {
         accent="mint"
         eyebrow="Spotify Threads · Music memory concept"
         headline="Rediscover music through the life around it."
-        description="I reimagined music discovery around mood, memory, and the personal context attached to what people play—not another feed of disconnected recommendations."
+        description="I reimagined music discovery around mood, memory, and the personal context attached to what people play, not another feed of disconnected recommendations."
         meta={[
           ['Role', 'UX Designer'],
           ['Timeline', '2 weeks'],

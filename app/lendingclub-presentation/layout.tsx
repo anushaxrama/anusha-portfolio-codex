@@ -15,9 +15,9 @@ const fraunces = Fraunces({
 })
 
 export const metadata: Metadata = {
-  title: 'Anusha Ramachandran — LendingClub Interview Deck',
+  title: 'Anusha Ramachandran: LendingClub Interview Deck',
   description:
-    'Interactive walkthrough of Nexus, NeuraNote, and FlowOps for Product & Experience—full case-study structure and portfolio visuals.',
+    'Interactive walkthrough of Nexus, NeuraNote, and FlowOps for Product & Experience, with full case-study structure and portfolio visuals.',
 }
 
 export default function LendingClubPresentationLayout({

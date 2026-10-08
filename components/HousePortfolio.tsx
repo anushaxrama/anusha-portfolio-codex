@@ -2,7 +2,8 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { useEffect, useRef, useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import ViewportVideo from '@/components/ViewportVideo'
 
 type Project = {
@@ -110,31 +111,6 @@ const projects: Project[] = [
     stat: 'Workflow logic',
     crop: 'left',
   },
-  {
-    title: 'HABITat',
-    category: 'Mobile · Behavior',
-    description: 'A habit tracker built around streaks, tiny rewards, and a virtual habitat that grows with you.',
-    href: '/case-study/habitat',
-    image: '/habitat/habitat-hero.png',
-    alt: 'HABITat app preview',
-    secondaryAlt: 'HABITat home dashboard',
-    tone: 'green',
-    stat: 'Habit loops',
-    crop: 'center',
-  },
-  {
-    title: 'Spotify Threads',
-    category: 'Concept · Music',
-    description: 'A Spotify concept for listening memory, mood-based discovery, and intentional rediscovery.',
-    href: '/case-study/spotify',
-    image: '/spotify/spotify-1.png',
-    alt: 'Spotify Threads single-phone prototype',
-    singlePhone: true,
-    secondaryAlt: 'Spotify Threads listening memory screen',
-    tone: 'mint',
-    stat: 'Music memory',
-    crop: 'center',
-  },
 ]
 
 const showcaseSlides: ShowcaseSlide[] = [
@@ -178,27 +154,6 @@ const showcaseSlides: ShowcaseSlide[] = [
     motion: 'afterglow',
   },
   {
-    title: 'Spotify Threads · Listening memory',
-    href: '/case-study/spotify',
-    image: '/spotify/spotify-1.png',
-    alt: 'Spotify Threads listening-memory mobile interface',
-    format: 'portrait',
-    fit: 'contain',
-    position: 'center',
-    tone: 'ink',
-    presentation: 'inset',
-    framing: 'tight',
-    variant: 'spotify',
-  },
-  {
-    title: 'Signal field · Generative motion',
-    alt: 'Animated RGB signal field visual experiment',
-    format: 'square',
-    tone: 'ink',
-    presentation: 'full',
-    art: 'signal-field',
-  },
-  {
     title: 'Crusoe · Kubernetes',
     href: '/case-study/crusoe',
     video: '/crusoe/empty-state-kubernetes.mp4',
@@ -210,12 +165,12 @@ const showcaseSlides: ShowcaseSlide[] = [
     variant: 'crusoe',
   },
   {
-    title: 'Clear, useful, human · Visual identity study',
-    alt: 'Layered gradient typography visual identity study',
-    format: 'landscape',
-    tone: 'sky',
+    title: 'Signal field · Generative motion',
+    alt: 'Animated RGB signal field visual experiment',
+    format: 'square',
+    tone: 'ink',
     presentation: 'full',
-    art: 'manifesto',
+    art: 'signal-field',
   },
   {
     title: 'Nexus · Multi-model workspace',
@@ -231,16 +186,12 @@ const showcaseSlides: ShowcaseSlide[] = [
     variant: 'nexus',
   },
   {
-    title: 'HABITat',
-    href: '/case-study/habitat',
-    image: '/habitat/habitat-hero.png',
-    alt: 'HABITat mobile app shown in transparent phone frames',
+    title: 'Clear, useful, human · Visual identity study',
+    alt: 'Layered gradient typography visual identity study',
     format: 'landscape',
-    fit: 'contain',
-    tone: 'sage',
-    presentation: 'inset',
-    framing: 'tight',
-    variant: 'habitat',
+    tone: 'sky',
+    presentation: 'full',
+    art: 'manifesto',
   },
 ]
 
@@ -248,19 +199,19 @@ const loopedShowcaseSlides = [...showcaseSlides, ...showcaseSlides]
 
 const supportTabs = [
   { image: '/tonipr/site-hero.jpg', alt: 'ToniPR storytelling platform', tone: 'tab-pink' },
+  { image: '/tonipr/tonipr-product-still.jpg', alt: 'ToniPR guided interview experience', tone: 'tab-mist' },
   { image: '/images/crusoe/final-instances-provisioning.png', alt: 'Crusoe Console provisioning experience', tone: 'tab-stone' },
+  { image: '/images/crusoe/final-kubernetes-empty.png', alt: 'Crusoe Kubernetes empty state', tone: 'tab-green' },
   { image: '/narbl/narbl-4.png', alt: 'Nexus AI research interface', tone: 'tab-ink' },
   { image: '/flowops/flowops-requests.png', alt: 'FlowOps request-management workspace', tone: 'tab-lime' },
   { image: '/neuranote/neuranote-1.png', alt: 'NeuraNote learning experience', tone: 'tab-sky' },
-  { image: '/habitat/habitat-hero.png', alt: 'HABITat mobile experience', tone: 'tab-green' },
   { image: '/images/inspiration/cosmic-figures.jpg', alt: 'Afterglow visual study', tone: 'tab-blue' },
-  { image: '/spotify/spotify-1.png', alt: 'Spotify Threads listening experience', tone: 'tab-mist' },
 ]
 
 const supportColumns = [
-  ['Product Design', 'Websites / Apps', 'Design Systems'],
-  ['Motion Design', 'Prototyping', 'Visual Identity'],
-  ['AI Interfaces', 'UX Research', 'Storytelling'],
+  ['Product Design', 'Websites / Apps'],
+  ['Animation', 'Visual identity'],
+  ['Framer', 'Iconography'],
 ]
 
 function ShowcaseArt({ kind }: { kind: NonNullable<ShowcaseSlide['art']> }) {
@@ -302,9 +253,36 @@ function ShowcaseArt({ kind }: { kind: NonNullable<ShowcaseSlide['art']> }) {
 }
 
 export default function HousePortfolio() {
+  const router = useRouter()
   const workStripRef = useRef<HTMLDivElement>(null)
   const workTrackRef = useRef<HTMLDivElement>(null)
+  const transitionTimerRef = useRef<number | null>(null)
   const [heroFlowersReady, setHeroFlowersReady] = useState(false)
+  const [transitionTarget, setTransitionTarget] = useState<string | null>(null)
+
+  const beginCaseStudyTransition = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (
+      event.defaultPrevented
+      || event.button !== 0
+      || event.metaKey
+      || event.ctrlKey
+      || event.shiftKey
+      || event.altKey
+    ) return
+
+    event.preventDefault()
+    if (transitionTarget) return
+
+    setTransitionTarget(href)
+    const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    transitionTimerRef.current = window.setTimeout(() => {
+      router.push(href)
+    }, reduceMotion ? 120 : 820)
+  }
+
+  useEffect(() => () => {
+    if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current)
+  }, [])
 
   useEffect(() => {
     const readyTimer = window.setTimeout(() => setHeroFlowersReady(true), 1250)
@@ -390,6 +368,22 @@ export default function HousePortfolio() {
 
   return (
     <main className="dani-page min-h-screen">
+      {transitionTarget && (
+        <div className="case-transition-overlay" role="status" aria-live="polite" aria-label="Opening case study">
+          <div className="case-transition-flower" aria-hidden="true">
+            <div className="case-transition-bloom case-transition-bloom-back">
+              {Array.from({ length: 6 }, (_, index) => <i key={index} />)}
+              <strong />
+            </div>
+            <div className="case-transition-bloom case-transition-bloom-front">
+              {Array.from({ length: 6 }, (_, index) => <i key={index} />)}
+              <strong />
+            </div>
+          </div>
+          <span className="case-transition-label">Opening case study</span>
+        </div>
+      )}
+
       <div className="dani-hero-shell">
         <nav className="dani-nav" aria-label="Primary navigation">
           <div className="dani-nav-menu">
@@ -429,7 +423,7 @@ export default function HousePortfolio() {
               <span>from concept to launch.</span>
             </h1>
             <p className="dani-hero-text">
-              I work across research, visual design, interaction, and front-end implementation—
+              I work across research, visual design, interaction, and front-end implementation,
               turning complex ideas and messy workflows into polished digital products people can
               understand, trust, and use.
             </p>
@@ -485,6 +479,7 @@ export default function HousePortfolio() {
                   aria-hidden={isDuplicate}
                   aria-label={`View ${slide.title}`}
                   tabIndex={isDuplicate ? -1 : undefined}
+                  onClick={(event) => beginCaseStudyTransition(event, slide.href!)}
                 >
                   {cardContents}
                 </Link>
@@ -507,7 +502,7 @@ export default function HousePortfolio() {
           <p className="dani-kicker">Selected projects</p>
           <h2>Tiny fraction of my work.</h2>
           <p>
-            A quick pass through product concepts, research-heavy flows, AI tools, mobile behavior design, and playful systems.
+            A quick pass through product concepts, research-heavy flows, AI tools, enterprise systems, and playful visual experiments.
           </p>
         </div>
 
@@ -517,6 +512,7 @@ export default function HousePortfolio() {
               key={project.title}
               href={project.href}
               className={`case-study-row ${project.tone}`}
+              onClick={(event) => beginCaseStudyTransition(event, project.href)}
             >
               <div className="case-side-tiles" aria-hidden="true">
                 <div className="case-flower-tile">
@@ -599,12 +595,15 @@ export default function HousePortfolio() {
         </div>
 
         <div className="support-tab-stage">
-          <div className="support-tab-interaction" aria-label="Design capability preview cards">
+          <div className="support-tab-interaction" aria-label="Design capability preview cards" tabIndex={0}>
             {supportTabs.map((tab, index) => (
               <div key={`${tab.image}-${index}`} className={`support-tab ${tab.tone}`}>
                 <Image src={tab.image} alt={tab.alt} fill sizes="160px" className="object-cover" />
               </div>
             ))}
+            <div className="support-note" aria-hidden="true">
+              Let’s make it<br />resonate.
+            </div>
           </div>
         </div>
 
@@ -647,7 +646,7 @@ export default function HousePortfolio() {
               I’m a product designer drawn to clear systems, playful details, and ideas that make people feel a little more capable.
             </p>
             <p>
-              My work lives around AI, learning tools, mobile habits, and the tiny interaction choices that make a product feel trustworthy.
+              My work lives around AI, complex workflows, and the tiny interaction choices that make digital products feel clear and trustworthy.
             </p>
           </div>
         </div>
@@ -657,7 +656,7 @@ export default function HousePortfolio() {
         <div className="pixel-story second">
           <div className="pixel-copy">
             <p>
-              I like making complex things feel easy without making them boring. Research, visual design, prototypes, and storytelling are usually all on the table.
+              I bring research, visual design, prototyping, and storytelling together to make complex things feel easy without making them boring.
             </p>
           </div>
           <div className="photo-board small-board">
@@ -702,7 +701,7 @@ export default function HousePortfolio() {
       <section className="flower-finale" aria-label="A closing design thought">
         <p>Good design makes complex things feel naturally clear.</p>
         <div className="flower-finale-grid" aria-hidden="true">
-          {Array.from({ length: 30 }, (_, flowerIndex) => (
+          {Array.from({ length: 50 }, (_, flowerIndex) => (
             <span className="flower-finale-mark" key={flowerIndex}>
               {Array.from({ length: 6 }, (_, petalIndex) => <i key={petalIndex} />)}
               <strong />

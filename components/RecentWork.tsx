@@ -40,7 +40,7 @@ export default function RecentWork() {
     setIsMobile(window.innerWidth < 768)
   }, [])
 
-  // Random particles only after mount — avoids SSR/client hydration mismatch
+  // Random particles only after mount to avoid SSR/client hydration mismatch
   const [particles, setParticles] = useState<Particle[]>([])
 
   useEffect(() => {
@@ -137,7 +137,7 @@ export default function RecentWork() {
     },
     {
       title: 'Spotify',
-      subtitle: 'Listening Threads — Intent-Based Discovery',
+      subtitle: 'Listening Threads: Intent-Based Discovery',
       description: 'A concept redesign exploring how Spotify could help users rediscover their relationship with music. Through user research and affinity mapping, I identified key pain points around passive listening and designed features like Listening Memory, Threads, and Emotional Clusters to bring intention back to music discovery.',
       demoImages: [
         { src: '/spotify/spotify-1.png', label: 'Your Threads - Home' },
@@ -757,4 +757,3 @@ export default function RecentWork() {
     </section>
   )
 }
-

@@ -10,7 +10,7 @@ const journey = [
 ]
 
 const interviewPrinciples = [
-  ['Intent first', 'Start with the outcome the user needs—trust, a launch, leads, hiring, or consistent visibility.'],
+  ['Intent first', 'Start with the outcome the user needs: trust, a launch, leads, hiring, or consistent visibility.'],
   ['Lower the stakes', 'Explain that the session is short, conversational, and does not require prepared copy.'],
   ['One moment at a time', 'Keep the current prompt and response state dominant so the interface never competes with the conversation.'],
   ['Visible momentum', 'Pair progress, recording feedback, and completion cues so users always know what is happening next.'],

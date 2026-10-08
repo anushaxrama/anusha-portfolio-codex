@@ -401,7 +401,7 @@ export default function LendingClubPresentationPage() {
   }, [])
 
   // Active nav chapter from scroll position (IntersectionObserver fought scrollIntoView when
-  // multiple tall sections intersected the viewport—often leaving "FlowOps" stuck on.)
+  // multiple tall sections intersected the viewport, often leaving "FlowOps" stuck on.)
   useEffect(() => {
     const HEADER_THRESHOLD = 100
     let ticking = false
@@ -514,7 +514,7 @@ export default function LendingClubPresentationPage() {
             </p>
             <ul className="space-y-2 text-sm leading-relaxed text-[#1E293B]/75">
               <li>
-                Use the top tabs, or <strong className="text-[#0F172A]">scroll</strong>—the highlight
+                Use the top tabs, or <strong className="text-[#0F172A]">scroll</strong>. The highlight
                 tracks where you are.
               </li>
               <li>
@@ -799,7 +799,7 @@ function ProjectWalkthrough({
           {/* Timeline */}
           <div className="lg:col-span-4">
             <p className="mb-3 text-[0.65rem] font-semibold uppercase tracking-[0.2em] text-[#1E293B]/45">
-              Sections — jump to any part
+              Sections: jump to any part
             </p>
             <div className="relative max-h-[min(70vh,520px)] space-y-0 overflow-y-auto pr-2 lg:max-h-[640px]">
               {project.stops.map((s, i) => (
@@ -922,7 +922,7 @@ function ProjectWalkthrough({
               )}
             </div>
 
-            {/* Visual stage — hidden when a stop has no visuals (e.g. Nexus middle sections) */}
+            {/* Visual stage is hidden when a stop has no visuals (e.g. Nexus middle sections) */}
             {visuals.length > 0 && (
               <div
                 ref={visualPanelRef}

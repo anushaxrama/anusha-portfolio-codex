@@ -124,14 +124,14 @@ const SECTIONS = [
 ]
 
 const NEXUS_IMAGES = [
-  { src: '/narbl/narbl-1.png', label: '1. Student lands on Nexus—one place, no tab hopping', why: 'Design decision: One entry point. No switching. The landing sets the promise.' },
+  { src: '/narbl/narbl-1.png', label: '1. Student lands on Nexus: one place, no tab hopping', why: 'Design decision: One entry point. No switching. The landing sets the promise.' },
   { src: '/narbl/narbl-3.png', label: '2. Asks one question. Nexus runs multiple models in parallel', why: 'Design decision: Single input. Complexity happens behind the scenes. User never sees the juggling.' },
   { src: '/narbl/narbl-4.png', label: '3. Models compare and surface the strongest answer', why: 'Design decision: Consensus is the product. We show the best answer, not a list to compare.' },
-  { src: '/narbl/narbl-5.png', label: '4. Success stories—students trust the results', why: 'Design decision: Social proof builds trust. Real students, real results.' },
+  { src: '/narbl/narbl-5.png', label: '4. Success stories help students trust the results', why: 'Design decision: Social proof builds trust. Real students, real results.' },
   { src: '/narbl/narbl-6.png', label: '5. Trusted by top students who need accuracy', why: 'Design decision: Accuracy matters for STEM. We leaned into that.' },
   { src: '/narbl/narbl-7.png', label: '6. Seamless integrations for homework and research', why: 'Design decision: Fit into existing workflows. No new habits required.' },
-  { src: '/narbl/narbl-8.png', label: '7. Why choose Nexus—one answer, backed by many', why: 'Design decision: One answer. Backed by many. That\'s the differentiator.' },
-  { src: '/narbl/narbl-9.png?v=5', label: '8. The final experience—ready for the next question', why: 'Design decision: The chat is the core. Model selector visible. Ready for the next question.' },
+  { src: '/narbl/narbl-8.png', label: '7. Why choose Nexus: one answer, backed by many', why: 'Design decision: One answer. Backed by many. That\'s the differentiator.' },
+  { src: '/narbl/narbl-9.png?v=5', label: '8. The final experience, ready for the next question', why: 'Design decision: The chat is the core. Model selector visible. Ready for the next question.' },
 ]
 
 const FIGMA_IMAGES = [
@@ -677,7 +677,7 @@ export default function CrusoeCaseStudy() {
           </p>
 
           {/* Interactive Pain Points Bar Chart */}
-          <p className="text-white/50 text-sm mb-4">Top pain points — click a bar to explore</p>
+          <p className="text-white/50 text-sm mb-4">Top pain points: click a bar to explore</p>
           <div className="space-y-4 mb-8">
             {PAIN_POINT_DATA.map((item, i) => (
               <div key={i} className="group">
@@ -709,7 +709,7 @@ export default function CrusoeCaseStudy() {
           </div>
 
           {/* Interactive Tool Usage Bar Chart */}
-          <p className="text-white/50 text-sm mb-4">Tools students use — click a bar to explore</p>
+          <p className="text-white/50 text-sm mb-4">Tools students use: click a bar to explore</p>
           <div className="space-y-4 mb-12">
             {TOOL_USAGE_DATA.map((t, i) => (
               <div key={i} className="group">
@@ -1020,7 +1020,7 @@ export default function CrusoeCaseStudy() {
                     Below each response, a &quot;Which models contributed?&quot; link let users expand to see the model badges.
                   </p>
                   <p className="text-white/40 text-sm">
-                    <strong className="text-amber-400/80">Why it failed:</strong> Transparency was hidden behind a click. Most users never expanded it. We wanted model visibility to be immediate—no extra step.
+                    <strong className="text-amber-400/80">Why it failed:</strong> Transparency was hidden behind a click. Most users never expanded it. We wanted model visibility to be immediate, with no extra step.
                   </p>
                 </>
               )}
@@ -1049,7 +1049,7 @@ export default function CrusoeCaseStudy() {
         <FadeIn>
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">Follow the Journey</h2>
-          <p className="text-white/50 text-sm mb-6">Click through to follow one student&apos;s path—from landing to trusted answer. Each screen has a design note explaining why it matters.</p>
+          <p className="text-white/50 text-sm mb-6">Click through to follow one student&apos;s path, from landing to trusted answer. Each screen has a design note explaining why it matters.</p>
           <div className="rounded-xl overflow-hidden bg-[#111] border border-white/10">
             <div className="relative aspect-[16/10]">
               <Image
@@ -1110,7 +1110,7 @@ export default function CrusoeCaseStudy() {
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">From Sketch to Ship</h2>
           <p className="text-white/50 text-sm mb-3">Watch the idea take shape.</p>
-          <p className="text-white/60 text-sm mb-4">Lo-fi to validate structure. Mid-fi to test flows. Hi-fi to ship. Each stage answered a different question—layout first, then interaction, then polish.</p>
+          <p className="text-white/60 text-sm mb-4">Lo-fi to validate structure. Mid-fi to test flows. Hi-fi to ship. Each stage answered a different question: layout first, then interaction, then polish.</p>
           <p className="text-white/40 text-xs mb-4">Click each stage to explore the design evolution</p>
           <div className="flex flex-wrap gap-2 mb-6">
             {(['lofi', 'midfi', 'hifi'] as const).map((level) => (
@@ -1616,7 +1616,7 @@ export default function CrusoeCaseStudy() {
         <FadeIn>
         <div className="max-w-5xl mx-auto">
           <h2 className="text-2xl font-bold mb-4">What We Shipped</h2>
-          <p className="text-white/50 text-sm mb-6">The trust gap had a design solution. Here&apos;s what made it into the product—and why we chose each.</p>
+          <p className="text-white/50 text-sm mb-6">The trust gap had a design solution. Here&apos;s what made it into the product and why we chose each element.</p>
           <div className="grid md:grid-cols-2 gap-6">
             {[
               { title: 'One Question, Best Answer', desc: 'Multiple models run in parallel and surface the strongest answer.', why: 'Students wanted one answer, not a list. We gave them one.' },
@@ -1701,7 +1701,7 @@ export default function CrusoeCaseStudy() {
         <div className="max-w-3xl mx-auto">
           <h2 className="text-2xl font-bold mb-6">The Fit</h2>
           <p className="text-white/70 leading-relaxed mb-6">
-            At Nexus I tackled model trust, switching between tools, and tab hopping—hiding complexity so students could get one answer. Crusoe tackles infrastructure visibility, energy transparency, and unified monitoring so developers can build without juggling tools. Different domains, but the same design philosophy: make powerful systems invisible so people can focus on what matters.
+            At Nexus I tackled model trust, switching between tools, and tab hopping, hiding complexity so students could get one answer. Crusoe tackles infrastructure visibility, energy transparency, and unified monitoring so developers can build without juggling tools. Different domains, but the same design philosophy: make powerful systems invisible so people can focus on what matters.
           </p>
           <p className="text-white/70 leading-relaxed mb-6">
             What gets me excited about Crusoe is the energy-first mindset. Turning flare gas into compute instead of burning it. Building AI infrastructure that runs on renewables. That&apos;s not just smart engineering, it&apos;s the kind of work that matters. I want to be part of a team that&apos;s rethinking how we power the future!
@@ -1770,7 +1770,7 @@ export default function CrusoeCaseStudy() {
             Crusoe prioritizes single source of truth over fragmented views, progressive disclosure of complexity, and proactive remediation. That&apos;s the same philosophy I applied to Nexus: one place, no tab hopping; complexity behind the scenes; users get what they need without managing the machinery.
           </p>
           <p className="text-white/70 leading-relaxed">
-            What draws me most is the energy-first mindset. Flare gas into compute, renewable-powered AI. That&apos;s not just smart engineering—it&apos;s work that matters. I want to design tools that make infrastructure invisible and do it sustainably, and I want to be part of that.
+            What draws me most is the energy-first mindset. Flare gas into compute, renewable-powered AI. That&apos;s not just smart engineering. It&apos;s work that matters. I want to design tools that make infrastructure invisible and do it sustainably, and I want to be part of that.
           </p>
         </div>
         </FadeIn>

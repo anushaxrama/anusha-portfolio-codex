@@ -28,7 +28,7 @@ export default function Hero() {
     setIsMobile(window.innerWidth < 768)
   }, [])
 
-  // Particles use random layout — must be built only on the client after mount
+  // Particles use random layout and must be built only on the client after mount
   // so server HTML matches the first client render (avoids hydration errors).
   const [particles, setParticles] = useState<Particle[]>([])
 
@@ -56,7 +56,7 @@ export default function Hero() {
     setShowScroll(true)
   }, [firstName, lastName])
 
-  // Type first name (skip when reduced motion — handled above)
+  // Type first name (skip when reduced motion, handled above)
   useEffect(() => {
     if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
 

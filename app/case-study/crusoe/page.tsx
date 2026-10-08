@@ -84,7 +84,7 @@ function CrusoeAuditArtifact() {
     {
       number: '03',
       title: 'Connect patterns across products',
-      description: 'Mapped recurring behaviors across resource types to show that the issue was systemic—not a collection of isolated empty screens.',
+      description: 'Mapped recurring behaviors across resource types to show that the issue was systemic, not a collection of isolated empty screens.',
       image: '/images/crusoe/figjam-pattern-map.png',
       width: 1800,
       height: 1450,
@@ -195,7 +195,7 @@ const futureEdgeCases = [
   {
     state: 'Ready',
     title: 'The next step after success',
-    description: 'Once the resource is ready, the banner changes from status reporting to the next required action—in this case, downloading the kubeconfig.',
+    description: 'Once the resource is ready, the banner changes from status reporting to the next required action, in this case downloading the kubeconfig.',
     image: '/images/crusoe/final-kubernetes-kubeconfig.png',
     width: 1440,
     height: 940,
@@ -323,7 +323,7 @@ const emptyStateWork = [
   {
     number: '01',
     title: 'Inventory the system',
-    body: 'Reviewed pages, tables, charts, cards, dropdowns, and modals across the Console—not just the most visible product screens.',
+    body: 'Reviewed pages, tables, charts, cards, dropdowns, and modals across the Console, not just the most visible product screens.',
     output: 'Cross-Console audit',
   },
   {

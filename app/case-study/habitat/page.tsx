@@ -515,7 +515,7 @@ export default function HabitatCaseStudy() {
                   style={{ backgroundColor: '#ffe5d0', boxShadow: '2px 2px 8px rgba(0,0,0,0.15)' }}
                 >
                   <p className="font-bold text-gray-800 mb-1">Opportunity</p>
-                  <p className="text-gray-700 leading-snug">Build a "habitat" that grows with habits—visual progress users care about.</p>
+                  <p className="text-gray-700 leading-snug">Build a "habitat" that grows with habits and creates visual progress users care about.</p>
                 </div>
               </div>
             </div>
@@ -856,7 +856,7 @@ export default function HabitatCaseStudy() {
           <p className="text-white/70 leading-relaxed italic">
             "I actually want to open this app every day. The animals make me feel like I'm working toward something real, not just checking boxes."
           </p>
-          <p className="text-white/40 text-sm mt-2">— Usability Testing Participant</p>
+          <p className="text-white/40 text-sm mt-2">Usability Testing Participant</p>
         </div>
       </Section>
 
