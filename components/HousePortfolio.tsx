@@ -39,7 +39,6 @@ type ShowcaseSlide = {
   tone: 'ink' | 'sage' | 'lilac' | 'sky' | 'rose' | 'citrus' | 'mint'
   presentation?: 'full' | 'inset'
   framing?: 'roomy' | 'tight'
-  motion?: 'afterglow'
   composition?: 'frameless'
   art?: 'orbit-bloom' | 'manifesto' | 'signal-field'
   variant?: 'spotify' | 'crusoe' | 'nexus' | 'habitat'
@@ -143,17 +142,6 @@ const showcaseSlides: ShowcaseSlide[] = [
     framing: 'tight',
   },
   {
-    title: 'Visual study · Afterglow',
-    image: '/images/inspiration/cosmic-figures.jpg',
-    alt: 'Dreamlike cosmic artwork with three glowing figures',
-    format: 'portrait',
-    fit: 'contain',
-    position: 'center',
-    tone: 'ink',
-    presentation: 'full',
-    motion: 'afterglow',
-  },
-  {
     title: 'Crusoe · Kubernetes',
     href: '/case-study/crusoe',
     video: '/crusoe/empty-state-kubernetes.mp4',
@@ -205,13 +193,12 @@ const supportTabs = [
   { image: '/narbl/narbl-4.png', alt: 'Nexus AI research interface', tone: 'tab-ink' },
   { image: '/flowops/flowops-requests.png', alt: 'FlowOps request-management workspace', tone: 'tab-lime' },
   { image: '/neuranote/neuranote-1.png', alt: 'NeuraNote learning experience', tone: 'tab-sky' },
-  { image: '/images/inspiration/cosmic-figures.jpg', alt: 'Afterglow visual study', tone: 'tab-blue' },
 ]
 
 const supportColumns = [
-  ['Product Design', 'Websites / Apps'],
-  ['Animation', 'Visual identity'],
-  ['Framer', 'Iconography'],
+  ['Product Design', 'Websites / Apps', 'Design systems'],
+  ['Animation', 'Midjourney', 'Visual identity'],
+  ['Framer', 'Marketing', 'Iconography'],
 ]
 
 function ShowcaseArt({ kind }: { kind: NonNullable<ShowcaseSlide['art']> }) {
@@ -444,7 +431,7 @@ export default function HousePortfolio() {
           <div ref={workTrackRef} className="work-track">
             {loopedShowcaseSlides.map((slide, index) => {
               const isDuplicate = index >= showcaseSlides.length
-              const cardClassName = `home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.motion ? ` showcase-motion-${slide.motion}` : ''}${slide.composition ? ` showcase-${slide.composition}` : ''}${slide.variant ? ` showcase-${slide.variant}` : ''}`
+              const cardClassName = `home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.composition ? ` showcase-${slide.composition}` : ''}${slide.variant ? ` showcase-${slide.variant}` : ''}`
               const cardContents = (
                 <>
                   <span className="showcase-media">

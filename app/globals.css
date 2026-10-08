@@ -12777,24 +12777,6 @@ body {
   object-fit: contain !important;
 }
 
-@keyframes afterglow-drift {
-  0% {
-    transform: scale(1.035) translate3d(-0.8%, 0.7%, 0);
-  }
-  48% {
-    transform: scale(1.075) translate3d(0.7%, -0.8%, 0);
-  }
-  100% {
-    transform: scale(1.045) translate3d(-0.2%, -0.3%, 0);
-  }
-}
-
-.showcase-motion-afterglow .showcase-media > img {
-  animation: afterglow-drift 10s ease-in-out infinite alternate;
-  transform-origin: center;
-  will-change: transform;
-}
-
 @media (max-width: 760px) {
   .digital-home {
     padding: 76px 0 84px;
@@ -12868,7 +12850,6 @@ body {
   .project-cover-art,
   .project-cover-orbit i,
   .toni-bubbles i,
-  .showcase-motion-afterglow .showcase-media > img,
   .footer-flower,
   .dani-signature span {
     animation: none !important;
@@ -15912,41 +15893,41 @@ body {
   }
 
   .support-tab-stage {
-    min-height: clamp(210px, 22vh, 245px);
+    min-height: clamp(168px, 18vh, 192px);
     margin-top: 0;
   }
 
   .support-tab-interaction {
-    width: min(1160px, 100%);
-    height: clamp(215px, 23vh, 250px);
+    width: min(900px, 100%);
+    height: clamp(158px, 17vh, 184px);
   }
 
   .support-tab {
     left: 0;
-    width: clamp(120px, 7.6vw, 160px);
-    border-width: 6px;
-    border-radius: 16px;
+    width: clamp(88px, 5.6vw, 112px);
+    border-width: 5px;
+    border-radius: 13px;
     transform:
       translateY(-50%)
-      translateX(calc(4px + var(--i, 0) * clamp(74px, 5.1vw, 95px)))
+      translateX(calc(4px + var(--i, 0) * clamp(52px, 3.6vw, 66px)))
       rotate(calc((var(--i, 0) - 3.5) * 1.15deg));
   }
 
   .support-tab-interaction:hover .support-tab {
     transform:
       translateY(-50%)
-      translateX(calc(2px + var(--i, 0) * clamp(68px, 4.75vw, 88px)))
+      translateX(calc(2px + var(--i, 0) * clamp(46px, 3.25vw, 60px)))
       rotate(calc((var(--i, 0) - 3.5) * 1.15deg));
   }
 
   .support-note {
-    left: min(78%, 870px);
-    width: 210px;
-    min-height: 200px;
+    left: min(72%, 650px);
+    width: 168px;
+    min-height: 138px;
     align-content: end;
-    padding: 24px 22px 26px;
-    border-radius: 20px;
-    font-size: 1.45rem;
+    padding: 19px 18px 21px;
+    border-radius: 18px;
+    font-size: 1.08rem;
   }
 
   .support-list-grid {
@@ -15954,8 +15935,8 @@ body {
   }
 
   .support-list-column span {
-    padding-block: 14px 16px;
-    font-size: clamp(1.18rem, 1.55vw, 1.6rem);
+    padding-block: 11px 13px;
+    font-size: clamp(1rem, 1.12vw, 1.2rem);
   }
 }
 
