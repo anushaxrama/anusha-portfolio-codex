@@ -319,10 +319,7 @@ export default function FlowOpsCaseStudy() {
         
         <div className="grid md:grid-cols-2 gap-8 max-w-5xl mb-12">
           {/* Primary Goals */}
-          <div 
-            className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
-          >
+          <div className="flowops-goals-card rounded-2xl p-8">
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">Design Goals</h4>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -361,10 +358,7 @@ export default function FlowOpsCaseStudy() {
           </div>
 
           {/* Out of Scope */}
-          <div 
-            className="rounded-2xl p-8 border border-white/10"
-            style={{ background: 'linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.2) 100%)' }}
-          >
+          <div className="flowops-scope-card rounded-2xl p-8">
             <h4 className="text-white/50 text-sm font-medium mb-6">Deliberately Out of Scope</h4>
             <div className="space-y-4">
               <div className="flex items-start gap-3">
@@ -1017,7 +1011,7 @@ export default function FlowOpsCaseStudy() {
           {/* Navigation Structure */}
           <div 
             className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">Role-Adaptive Navigation</h4>
             <div className="space-y-4">
@@ -1043,7 +1037,7 @@ export default function FlowOpsCaseStudy() {
           {/* Content Hierarchy */}
           <div 
             className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">Request Detail Hierarchy</h4>
             <div className="space-y-3 text-sm">
@@ -1098,8 +1092,8 @@ export default function FlowOpsCaseStudy() {
         <div className="space-y-8 max-w-5xl">
           {/* Flow 1: Happy Path */}
           <div 
-            className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            className="flowops-workflow-card rounded-2xl p-8 border border-[#ef4444]/20"
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-emerald-500/20 text-emerald-400">Flow 1</span>
@@ -1123,8 +1117,8 @@ export default function FlowOpsCaseStudy() {
 
           {/* Flow 2: Agent Triage */}
           <div 
-            className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            className="flowops-workflow-card rounded-2xl p-8 border border-[#ef4444]/20"
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-cyan-500/20 text-cyan-400">Flow 2</span>
@@ -1144,8 +1138,8 @@ export default function FlowOpsCaseStudy() {
 
           {/* Flow 3: Needs Info Loop */}
           <div 
-            className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            className="flowops-workflow-card rounded-2xl p-8 border border-[#ef4444]/20"
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-orange-500/20 text-orange-400">Flow 3</span>
@@ -1167,8 +1161,8 @@ export default function FlowOpsCaseStudy() {
 
           {/* Flow 4: SLA Escalation */}
           <div 
-            className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            className="flowops-workflow-card rounded-2xl p-8 border border-[#ef4444]/20"
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <div className="flex items-center gap-3 mb-6">
               <span className="px-3 py-1 rounded-full text-xs font-medium bg-red-500/20 text-red-400">Flow 4</span>
@@ -1372,7 +1366,7 @@ export default function FlowOpsCaseStudy() {
           {/* What I Tested */}
           <div 
             className="rounded-2xl p-8 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">What I Tested</h4>
             <div className="grid md:grid-cols-2 gap-6">
@@ -1390,7 +1384,7 @@ export default function FlowOpsCaseStudy() {
           {/* What Confused Users */}
           <div 
             className="rounded-2xl p-8 border border-white/10"
-            style={{ background: 'linear-gradient(145deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0.2) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #ffffff 0%, #f4f1ee 100%)' }}
           >
             <h4 className="text-white/50 text-sm font-medium mb-6">What Caused Confusion</h4>
             <div className="space-y-4">
@@ -1418,7 +1412,7 @@ export default function FlowOpsCaseStudy() {
           {/* What I Changed */}
           <div 
             className="rounded-2xl p-8 border border-emerald-500/20"
-            style={{ background: 'linear-gradient(145deg, rgba(16,185,129,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #f6fcf8 0%, #e8f5ec 100%)' }}
           >
             <h4 className="text-emerald-400 text-sm font-medium mb-6">What I Changed</h4>
             <div className="grid md:grid-cols-2 gap-6">
@@ -1529,7 +1523,7 @@ export default function FlowOpsCaseStudy() {
           {/* Colors */}
           <div 
             className="rounded-2xl p-6 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">Color Palette</h4>
             <div className="space-y-3">
@@ -1567,7 +1561,7 @@ export default function FlowOpsCaseStudy() {
           {/* Typography */}
           <div 
             className="rounded-2xl p-6 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">Typography</h4>
             <div className="space-y-4">
@@ -1593,7 +1587,7 @@ export default function FlowOpsCaseStudy() {
           {/* Components */}
           <div 
             className="rounded-2xl p-6 border border-[#ef4444]/20"
-            style={{ background: 'linear-gradient(145deg, rgba(239,68,68,0.08) 0%, rgba(0,0,0,0.4) 100%)' }}
+            style={{ background: 'linear-gradient(145deg, #fffaf7 0%, #f7ebe2 100%)' }}
           >
             <h4 className="text-[#ef4444] text-sm font-medium mb-6">Components</h4>
             <div className="space-y-4">
@@ -1607,9 +1601,9 @@ export default function FlowOpsCaseStudy() {
               <div>
                 <p className="text-white/60 text-xs mb-2">Status Badges</p>
                 <div className="flex flex-wrap gap-1">
-                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-[10px] rounded">Active</span>
-                  <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-[10px] rounded">Pending</span>
-                  <span className="px-2 py-1 bg-red-500/20 text-red-400 text-[10px] rounded">Urgent</span>
+                  <span className="px-2 py-1 bg-emerald-500/20 text-emerald-400 text-xs font-semibold rounded">Active</span>
+                  <span className="px-2 py-1 bg-amber-500/20 text-amber-400 text-xs font-semibold rounded">Pending</span>
+                  <span className="px-2 py-1 bg-red-500/20 text-red-400 text-xs font-semibold rounded">Urgent</span>
                 </div>
               </div>
               <div>

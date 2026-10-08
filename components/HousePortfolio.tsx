@@ -41,7 +41,7 @@ type ShowcaseSlide = {
   motion?: 'afterglow'
   composition?: 'frameless'
   art?: 'orbit-bloom' | 'manifesto' | 'signal-field'
-  variant?: 'spotify' | 'crusoe' | 'habitat'
+  variant?: 'spotify' | 'crusoe' | 'nexus' | 'habitat'
 }
 
 const projects: Project[] = [
@@ -115,7 +115,7 @@ const projects: Project[] = [
     category: 'Mobile · Behavior',
     description: 'A habit tracker built around streaks, tiny rewards, and a virtual habitat that grows with you.',
     href: '/case-study/habitat',
-    image: '/habitat/hero-phones.jpeg',
+    image: '/habitat/habitat-hero.png',
     alt: 'HABITat app preview',
     secondaryAlt: 'HABITat home dashboard',
     tone: 'green',
@@ -228,18 +228,19 @@ const showcaseSlides: ShowcaseSlide[] = [
     tone: 'ink',
     presentation: 'inset',
     framing: 'tight',
-    variant: 'habitat',
+    variant: 'nexus',
   },
   {
     title: 'HABITat',
     href: '/case-study/habitat',
-    image: '/habitat/hero-phones.jpeg',
+    image: '/habitat/habitat-hero.png',
     alt: 'HABITat mobile app shown in transparent phone frames',
     format: 'landscape',
     fit: 'contain',
-    tone: 'ink',
+    tone: 'sage',
     presentation: 'inset',
     framing: 'tight',
+    variant: 'habitat',
   },
 ]
 
@@ -251,7 +252,7 @@ const supportTabs = [
   { image: '/narbl/narbl-4.png', alt: 'Nexus AI research interface', tone: 'tab-ink' },
   { image: '/flowops/flowops-requests.png', alt: 'FlowOps request-management workspace', tone: 'tab-lime' },
   { image: '/neuranote/neuranote-1.png', alt: 'NeuraNote learning experience', tone: 'tab-sky' },
-  { image: '/habitat/hero-phones.jpeg', alt: 'HABITat mobile experience', tone: 'tab-green' },
+  { image: '/habitat/habitat-hero.png', alt: 'HABITat mobile experience', tone: 'tab-green' },
   { image: '/images/inspiration/cosmic-figures.jpg', alt: 'Afterglow visual study', tone: 'tab-blue' },
   { image: '/spotify/spotify-1.png', alt: 'Spotify Threads listening experience', tone: 'tab-mist' },
 ]
