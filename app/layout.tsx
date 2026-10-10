@@ -9,8 +9,8 @@ const inter = Inter({
 })
 
 export const metadata: Metadata = {
-  title: 'Anusha Ramachandran - Portfolio',
-  description: 'Designer and developer passionate about creating beautiful, meaningful experiences.',
+  title: 'Anusha Ramachandran | Product Designer',
+  description: 'Product and visual designer shaping complex AI tools, enterprise systems, and digital stories into clear, trustworthy experiences.',
 }
 
 export default function RootLayout({

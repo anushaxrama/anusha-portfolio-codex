@@ -7,244 +7,165 @@ import { useEffect, useRef, useState, type MouseEvent } from 'react'
 import ViewportVideo from '@/components/ViewportVideo'
 
 type Project = {
+  number: string
   title: string
   category: string
   description: string
   href: string
   image: string
   alt: string
-  previewVideo?: string
-  secondaryImage?: string
+  secondaryImage: string
   secondaryAlt: string
-  tone: string
-  stat: string
-  crop: string
-  singlePhone?: boolean
-  placeholder?: boolean
-  placeholderLabel?: string
-  placeholderTitle?: string
-  placeholderMeta?: string
+  detail: string
+  tone: 'cobalt' | 'coral' | 'violet' | 'blush' | 'lime'
 }
 
-type ShowcaseSlide = {
+type ReelItem = {
   title: string
   href?: string
-  alt: string
-  format: 'portrait' | 'square' | 'landscape'
-  image?: string
-  secondaryImage?: string
   video?: string
-  position?: string
-  fit?: 'cover' | 'contain'
-  tone: 'ink' | 'sage' | 'lilac' | 'sky' | 'rose' | 'citrus' | 'mint'
-  presentation?: 'full' | 'inset'
-  framing?: 'roomy' | 'tight'
-  composition?: 'frameless'
-  art?: 'orbit-bloom' | 'manifesto' | 'signal-field'
-  variant?: 'spotify' | 'crusoe' | 'nexus' | 'habitat'
+  image?: string
+  alt: string
+  format: 'wide' | 'square' | 'portrait'
+  tone: 'dark' | 'rose' | 'blue' | 'cream'
+  startAt?: number
 }
 
 const projects: Project[] = [
   {
+    number: '01',
     title: 'Crusoe',
-    category: 'Internship · Cloud Infrastructure',
-    description: 'Three connected initiatives that made complex cloud workflows clearer, more actionable, and easier to trust.',
+    category: 'Cloud infrastructure · Product design',
+    description: 'Three connected initiatives that made dense cloud workflows clearer, more actionable, and easier to trust.',
     href: '/case-study/crusoe',
     image: '/images/crusoe/final-instances-provisioning.png',
-    alt: 'Crusoe Console case study preview',
+    alt: 'Crusoe Console instances experience',
     secondaryImage: '/images/crusoe/final-kubernetes-empty.png',
-    secondaryAlt: 'Crusoe Kubernetes Console empty state',
-    tone: 'crusoe',
-    stat: 'Console clarity',
-    crop: 'center',
+    secondaryAlt: 'Crusoe Kubernetes empty state',
+    detail: 'Internship · End-to-end systems',
+    tone: 'cobalt',
   },
   {
+    number: '02',
     title: 'ToniPR',
-    category: 'Internship · AI Storytelling',
-    description: 'An end-to-end platform that turns one guided founder interview into useful PR and marketing content.',
+    category: 'AI storytelling · Product experience',
+    description: 'A guided platform that turns one founder interview into useful PR and marketing content.',
     href: '/case-study/tonipr',
     image: '/tonipr/site-hero.jpg',
-    alt: 'ToniPR case study preview',
+    alt: 'ToniPR website hero',
     secondaryImage: '/tonipr/tonipr-product-still.jpg',
-    secondaryAlt: 'ToniPR product walkthrough',
-    tone: 'toni',
-    stat: 'Interview to content',
-    crop: 'center',
+    secondaryAlt: 'ToniPR guided product experience',
+    detail: 'Internship · Product and narrative',
+    tone: 'coral',
   },
   {
+    number: '03',
     title: 'Nexus',
-    category: 'AI · Education',
-    description: 'Consensus-backed answers from multiple models, designed for students who need clarity fast.',
+    category: 'Multi-model AI · Research platform',
+    description: 'Consensus-backed answers from multiple models for students who need clarity without the noise.',
     href: '/case-study/nexus',
     image: '/narbl/narbl-1.png',
-    alt: 'Nexus landing page preview',
+    alt: 'Nexus AI research workspace',
     secondaryImage: '/narbl/narbl-7.png',
-    secondaryAlt: 'Nexus research workspace',
-    tone: 'blue',
-    stat: 'AI clarity',
-    crop: 'center',
+    secondaryAlt: 'Nexus multi-model comparison flow',
+    detail: 'Concept · Research and interaction',
+    tone: 'violet',
   },
   {
+    number: '04',
     title: 'NeuraNote',
-    category: 'AI · Learning',
-    description: 'A calmer note-taking system for memory, concept maps, and review rituals.',
+    category: 'AI notes · Memory support',
+    description: 'A calmer note-taking system built around concept maps, memory cues, and thoughtful review rituals.',
     href: '/case-study/neuranote',
     image: '/neuranote/neuranote-1.png',
-    alt: 'NeuraNote interface preview',
+    alt: 'NeuraNote note-taking interface',
     secondaryImage: '/neuranote/neuranote-5.png',
-    secondaryAlt: 'NeuraNote review flow',
-    tone: 'pink',
-    stat: 'Memory-first',
-    crop: 'center',
+    secondaryAlt: 'NeuraNote review experience',
+    detail: 'Concept · Product and visual design',
+    tone: 'blush',
   },
   {
+    number: '05',
     title: 'FlowOps',
-    category: 'B2B · Workflow',
-    description: 'Enterprise request management made more readable across roles, approvals, and SLAs.',
+    category: 'Enterprise requests · Workflow design',
+    description: 'Request management made more readable across complex roles, approvals, and time-sensitive SLAs.',
     href: '/case-study/flowops',
     image: '/flowops/flowops-requests.png',
-    alt: 'FlowOps dashboard preview',
+    alt: 'FlowOps request-management dashboard',
     secondaryImage: '/flowops/flowops-role-switcher.png',
-    secondaryAlt: 'FlowOps agent workspace',
-    tone: 'orange',
-    stat: 'Workflow logic',
-    crop: 'left',
+    secondaryAlt: 'FlowOps role switching interface',
+    detail: 'Concept · Enterprise UX',
+    tone: 'lime',
   },
 ]
 
-const showcaseSlides: ShowcaseSlide[] = [
+const reelItems: ReelItem[] = [
   {
-    title: 'ToniPR · Product walkthrough',
+    title: 'ToniPR product story',
     href: '/case-study/tonipr',
     video: '/tonipr/tonipr-centered-walkthrough.mp4',
-    alt: 'ToniPR marketing experience and product story walkthrough',
-    format: 'landscape',
+    alt: 'ToniPR product story walkthrough',
+    format: 'wide',
     tone: 'rose',
-    presentation: 'inset',
-    framing: 'roomy',
   },
   {
-    title: 'Orbital bloom · Motion study',
-    alt: 'Animated orbital bloom visual study',
-    format: 'portrait',
-    tone: 'ink',
-    presentation: 'full',
-    art: 'orbit-bloom',
-  },
-  {
-    title: 'NeuraNote · Product reel',
+    title: 'NeuraNote product reel',
     href: '/case-study/neuranote',
     video: '/neuranote/neuranote-showcase-borderless-wide.mp4',
-    alt: 'NeuraNote hero, dashboard, concept map, review, and insights experience',
-    format: 'landscape',
-    tone: 'lilac',
-    presentation: 'inset',
-    framing: 'tight',
+    alt: 'NeuraNote product experience',
+    format: 'wide',
+    tone: 'blue',
   },
   {
-    title: 'Crusoe · Kubernetes',
+    title: 'Crusoe Kubernetes',
     href: '/case-study/crusoe',
     video: '/crusoe/empty-state-kubernetes.mp4',
-    alt: 'Crusoe Console Kubernetes empty state walkthrough',
-    format: 'landscape',
-    tone: 'ink',
-    presentation: 'inset',
-    framing: 'tight',
-    variant: 'crusoe',
+    alt: 'Crusoe Kubernetes empty state walkthrough',
+    format: 'wide',
+    tone: 'dark',
   },
   {
-    title: 'Signal field · Generative motion',
-    alt: 'Animated RGB signal field visual experiment',
-    format: 'square',
-    tone: 'ink',
-    presentation: 'full',
-    art: 'signal-field',
-  },
-  {
-    title: 'Nexus · Multi-model workspace',
+    title: 'Nexus workspace',
     href: '/case-study/nexus',
-    image: '/narbl/narbl-1.png',
-    alt: 'Nexus AI research workspace landing experience',
-    format: 'landscape',
-    fit: 'contain',
-    position: 'center',
-    tone: 'ink',
-    presentation: 'inset',
-    framing: 'tight',
-    variant: 'nexus',
+    image: '/narbl/narbl-4.png',
+    alt: 'Nexus AI workspace',
+    format: 'square',
+    tone: 'cream',
   },
   {
-    title: 'Clear, useful, human · Visual identity study',
-    alt: 'Layered gradient typography visual identity study',
-    format: 'landscape',
-    tone: 'sky',
-    presentation: 'full',
-    art: 'manifesto',
+    title: 'FlowOps request logic',
+    href: '/case-study/flowops',
+    image: '/flowops/flowops-role-switcher.png',
+    alt: 'FlowOps role-based workflow',
+    format: 'portrait',
+    tone: 'rose',
   },
 ]
 
-const loopedShowcaseSlides = [...showcaseSlides, ...showcaseSlides]
-
-const supportTabs = [
-  { image: '/tonipr/site-hero.jpg', alt: 'ToniPR storytelling platform', tone: 'tab-pink' },
-  { image: '/tonipr/tonipr-product-still.jpg', alt: 'ToniPR guided interview experience', tone: 'tab-mist' },
-  { image: '/images/crusoe/final-instances-provisioning.png', alt: 'Crusoe Console provisioning experience', tone: 'tab-stone' },
-  { image: '/images/crusoe/final-kubernetes-empty.png', alt: 'Crusoe Kubernetes empty state', tone: 'tab-green' },
-  { image: '/narbl/narbl-4.png', alt: 'Nexus AI research interface', tone: 'tab-ink' },
-  { image: '/flowops/flowops-requests.png', alt: 'FlowOps request-management workspace', tone: 'tab-lime' },
-  { image: '/neuranote/neuranote-1.png', alt: 'NeuraNote learning experience', tone: 'tab-sky' },
+const capabilities = [
+  'Product Design',
+  'Websites / Apps',
+  'Design systems',
+  'Animation',
+  'Midjourney',
+  'Visual identity',
+  'Framer',
+  'Marketing',
+  'Iconography',
 ]
 
-const supportColumns = [
-  ['Product Design', 'Websites / Apps', 'Design systems'],
-  ['Animation', 'Midjourney', 'Visual identity'],
-  ['Framer', 'Marketing', 'Iconography'],
-]
-
-function ShowcaseArt({ kind }: { kind: NonNullable<ShowcaseSlide['art']> }) {
-  if (kind === 'orbit-bloom') {
-    return (
-      <span className="showcase-art orbit-bloom" aria-hidden="true">
-        <span className="orbit-stars" />
-        <span className="orbit-flower">
-          <i /><i /><i /><i /><i /><i />
-        </span>
-        <span className="orbit-horizon" />
-      </span>
-    )
-  }
-
-  if (kind === 'manifesto') {
-    return (
-      <span className="showcase-art manifesto-study" aria-hidden="true">
-        <span className="manifesto-glow" />
-        <span className="manifesto-layer manifesto-layer-back" />
-        <span className="manifesto-layer manifesto-layer-middle" />
-        <span className="manifesto-panel">
-          <span className="manifesto-words">Clear.<br />Useful.<br />Human.</span>
-          <strong>make it click.</strong>
-        </span>
-      </span>
-    )
-  }
-
+function Flower({ className = '' }: { className?: string }) {
   return (
-    <span className="showcase-art signal-field" aria-hidden="true">
-      <span className="signal-grid" />
-      <span className="signal-glow" />
-      <span className="signal-bars">
-        {Array.from({ length: 17 }, (_, index) => <i key={index} />)}
-      </span>
+    <span className={`neo-flower ${className}`} aria-hidden="true">
+      {Array.from({ length: 6 }, (_, index) => <i key={index} />)}
+      <strong />
     </span>
   )
 }
 
 export default function HousePortfolio() {
   const router = useRouter()
-  const workStripRef = useRef<HTMLDivElement>(null)
-  const workTrackRef = useRef<HTMLDivElement>(null)
   const transitionTimerRef = useRef<number | null>(null)
-  const [heroFlowersReady, setHeroFlowersReady] = useState(false)
   const [transitionTarget, setTransitionTarget] = useState<string | null>(null)
 
   const beginCaseStudyTransition = (event: MouseEvent<HTMLAnchorElement>, href: string) => {
@@ -264,219 +185,195 @@ export default function HousePortfolio() {
     const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     transitionTimerRef.current = window.setTimeout(() => {
       router.push(href)
-    }, reduceMotion ? 120 : 820)
+    }, reduceMotion ? 80 : 620)
   }
+
+  useEffect(() => {
+    const revealNodes = Array.from(document.querySelectorAll<HTMLElement>('[data-reveal]'))
+    if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      revealNodes.forEach((node) => node.classList.add('is-visible'))
+      return
+    }
+
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible')
+          observer.unobserve(entry.target)
+        }
+      })
+    }, { threshold: 0.16 })
+
+    revealNodes.forEach((node) => observer.observe(node))
+    return () => observer.disconnect()
+  }, [])
 
   useEffect(() => () => {
     if (transitionTimerRef.current !== null) window.clearTimeout(transitionTimerRef.current)
   }, [])
 
-  useEffect(() => {
-    const readyTimer = window.setTimeout(() => setHeroFlowersReady(true), 1250)
-    return () => window.clearTimeout(readyTimer)
-  }, [])
-
-  useEffect(() => {
-    const strip = workStripRef.current
-    const track = workTrackRef.current
-    if (!strip || !track || window.matchMedia('(prefers-reduced-motion: reduce)').matches) return
-
-    const now = typeof window.performance?.now === 'function'
-      ? () => window.performance.now()
-      : () => Date.now()
-    let frame = 0
-    let lastTime = now()
-    let offset = 0
-    const normalSpeed = 30
-    const hoverSpeed = 8
-    let speed = normalSpeed
-    let targetSpeed = normalSpeed
-    let loopWidth = 0
-    const scheduleFrame = typeof window.requestAnimationFrame === 'function'
-      ? (callback: FrameRequestCallback) => window.requestAnimationFrame(callback)
-      : (callback: FrameRequestCallback) => window.setTimeout(() => callback(now()), 16)
-    const cancelFrame = typeof window.cancelAnimationFrame === 'function'
-      ? (id: number) => window.cancelAnimationFrame(id)
-      : (id: number) => window.clearTimeout(id)
-
-    const measureLoop = () => {
-      const firstSlide = track.children[0] as HTMLElement | undefined
-      const repeatedFirstSlide = track.children[showcaseSlides.length] as HTMLElement | undefined
-      loopWidth = firstSlide && repeatedFirstSlide
-        ? repeatedFirstSlide.offsetLeft - firstSlide.offsetLeft
-        : track.scrollWidth / 2
-      if (loopWidth > 0) offset %= loopWidth
-    }
-
-    const handleVisibilityChange = () => {
-      lastTime = now()
-    }
-
-    const handlePointerEnter = () => {
-      targetSpeed = hoverSpeed
-    }
-
-    const handlePointerLeave = () => {
-      targetSpeed = normalSpeed
-    }
-
-    measureLoop()
-    const resizeObserver = typeof ResizeObserver === 'function'
-      ? new ResizeObserver(measureLoop)
-      : null
-    resizeObserver?.observe(track)
-    window.addEventListener('resize', measureLoop, { passive: true })
-    document.addEventListener('visibilitychange', handleVisibilityChange)
-    strip.addEventListener('pointerenter', handlePointerEnter)
-    strip.addEventListener('pointerleave', handlePointerLeave)
-
-    const move = (time: number) => {
-      const elapsed = Math.min((time - lastTime) / 1000, 0.05)
-      lastTime = time
-      speed += (targetSpeed - speed) * Math.min(1, elapsed * 7)
-      if (loopWidth > 0) {
-        offset = (offset + speed * elapsed) % loopWidth
-        track.style.transform = `translate3d(${-offset}px, 0, 0)`
-      }
-
-      frame = scheduleFrame(move)
-    }
-
-    frame = scheduleFrame(move)
-    return () => {
-      cancelFrame(frame)
-      resizeObserver?.disconnect()
-      window.removeEventListener('resize', measureLoop)
-      document.removeEventListener('visibilitychange', handleVisibilityChange)
-      strip.removeEventListener('pointerenter', handlePointerEnter)
-      strip.removeEventListener('pointerleave', handlePointerLeave)
-    }
-  }, [])
-
   return (
-    <main className="dani-page min-h-screen">
+    <main className="neo-portfolio">
       {transitionTarget && (
-        <div className="case-transition-overlay" role="status" aria-live="polite" aria-label="Opening case study">
-          <div className="case-transition-flower" aria-hidden="true">
-            <div className="case-transition-bloom case-transition-bloom-back">
-              {Array.from({ length: 6 }, (_, index) => <i key={index} />)}
-              <strong />
-            </div>
-            <div className="case-transition-bloom case-transition-bloom-front">
-              {Array.from({ length: 6 }, (_, index) => <i key={index} />)}
-              <strong />
-            </div>
-          </div>
-          <span className="case-transition-label">Opening case study</span>
+        <div className="neo-transition" role="status" aria-live="polite" aria-label="Opening case study">
+          <Flower className="neo-transition-flower neo-transition-back" />
+          <Flower className="neo-transition-flower neo-transition-front" />
+          <span>Opening case study</span>
         </div>
       )}
 
-      <div className="dani-hero-shell">
-        <nav className="dani-nav" aria-label="Primary navigation">
-          <div className="dani-nav-menu">
-            <a href="#work" className="is-current">Works</a>
-            <a href="#about">About me</a>
-            <a
-              href="/Anusha_Ramachandran_Resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Résumé
-            </a>
-          </div>
+      <header className="neo-nav">
+        <a href="#top" className="neo-brand" aria-label="Anusha Ramachandran, home">
+          <span className="neo-monogram" aria-hidden="true">AR</span>
+          <span>
+            <strong>Anusha Ramachandran</strong>
+            <small>Product + visual designer</small>
+          </span>
+        </a>
+        <nav aria-label="Primary navigation">
+          <a href="#about">About</a>
+          <a href="#projects">Projects</a>
+          <a href="#playground">Playground</a>
         </nav>
-
-        <section className="dani-hero">
-          <div className={`hero-flower flower-blue${heroFlowersReady ? ' is-ready' : ''}`} aria-hidden="true">
-            <div className="hero-flower-shape">
-              <span /><span /><span /><span /><span /><span />
-              <strong />
-            </div>
-          </div>
-          <div className={`hero-flower flower-red${heroFlowersReady ? ' is-ready' : ''}`} aria-hidden="true">
-            <div className="hero-flower-shape">
-              <span /><span /><span /><span /><span /><span />
-              <strong />
-            </div>
-          </div>
-          <div className="dani-hero-copy">
-            <div className="hero-doodle" aria-hidden="true">
-              <span />
-            </div>
-            <p className="dani-kicker">Hi, I’m Anusha</p>
-            <h1>
-              <span>Visual and Product</span>
-              <span>designer bringing ideas</span>
-              <span>from concept to launch.</span>
-            </h1>
-            <p className="dani-hero-text">
-              I work across research, visual design, interaction, and front-end implementation,
-              turning complex ideas and messy workflows into polished digital products people can
-              understand, trust, and use.
-            </p>
-            <div className="dani-hero-actions">
-              <a href="mailto:arama@ucdavis.edu" className="dani-button primary">Chat with me</a>
-            </div>
-          </div>
-        </section>
-      </div>
-
-      <section id="work" className="digital-home">
-        <h2>Step into my digital home</h2>
-        <div
-          ref={workStripRef}
-          className="work-strip"
-          aria-label="Featured portfolio projects"
+        <a
+          className="neo-nav-social"
+          href="https://www.linkedin.com/in/anusha-ramachandran-45882724a"
+          target="_blank"
+          rel="noopener noreferrer"
+          aria-label="Anusha on LinkedIn"
         >
-          <div ref={workTrackRef} className="work-track">
-            {loopedShowcaseSlides.map((slide, index) => {
-              const isDuplicate = index >= showcaseSlides.length
-              const cardClassName = `home-work-card showcase-${slide.format} showcase-tone-${slide.tone} showcase-${slide.presentation ?? 'full'}${slide.video ? ' showcase-video' : ''}${slide.framing ? ` showcase-${slide.framing}` : ''}${slide.composition ? ` showcase-${slide.composition}` : ''}${slide.variant ? ` showcase-${slide.variant}` : ''}`
-              const cardContents = (
+          in
+        </a>
+      </header>
+
+      <section id="top" className="neo-hero">
+        <div className="neo-hero-glow glow-coral" aria-hidden="true" />
+        <div className="neo-hero-glow glow-cobalt" aria-hidden="true" />
+        <div className="neo-hero-glow glow-blush" aria-hidden="true" />
+        <Flower className="hero-bloom bloom-one" />
+        <Flower className="hero-bloom bloom-two" />
+
+        <div className="neo-hero-copy">
+          <p className="neo-eyebrow">Hello, I’m Anusha</p>
+          <h1>
+            Product designer<br />
+            <em>making complexity clear.</em>
+          </h1>
+          <p className="neo-hero-lede">
+            I shape AI tools, enterprise systems, and digital stories into experiences people can understand, trust, and enjoy using.
+          </p>
+          <a className="neo-circle-link" href="#projects" aria-label="View selected projects">
+            <span aria-hidden="true">↓</span>
+            <strong>View projects</strong>
+          </a>
+        </div>
+
+        <div className="neo-hero-note" aria-hidden="true">
+          <span>Research</span>
+          <span>Interaction</span>
+          <span>Visual craft</span>
+        </div>
+      </section>
+
+      <section id="projects" className="neo-projects">
+        <div className="neo-section-intro" data-reveal>
+          <p className="neo-section-index">01 / Selected work</p>
+          <h2>Complex products,<br /><em>told clearly.</em></h2>
+          <p>A selection of product systems, visual stories, and interaction decisions from concept through launch.</p>
+        </div>
+
+        <div className="neo-project-list">
+          {projects.map((project, index) => (
+            <article
+              key={project.title}
+              className={`neo-project-row tone-${project.tone}${index % 2 ? ' is-reversed' : ''}`}
+              data-reveal
+            >
+              <Link
+                href={project.href}
+                className="neo-project-visual"
+                aria-label={`View ${project.title} case study`}
+                onClick={(event) => beginCaseStudyTransition(event, project.href)}
+              >
+                <div className="neo-project-image neo-project-image-main">
+                  <Image
+                    src={project.image}
+                    alt={project.alt}
+                    fill
+                    sizes="(max-width: 800px) 92vw, 52vw"
+                  />
+                </div>
+                <div className="neo-project-image neo-project-image-secondary">
+                  <Image
+                    src={project.secondaryImage}
+                    alt={project.secondaryAlt}
+                    fill
+                    sizes="(max-width: 800px) 54vw, 22vw"
+                  />
+                </div>
+                <span className="neo-project-number">{project.number}</span>
+              </Link>
+
+              <div className="neo-project-copy">
+                <p className="neo-project-pill">{project.category}</p>
+                <h3>{project.title}</h3>
+                <p>{project.description}</p>
+                <small>{project.detail}</small>
+                <Link
+                  href={project.href}
+                  className="neo-text-link"
+                  onClick={(event) => beginCaseStudyTransition(event, project.href)}
+                >
+                  View case study <span aria-hidden="true">↗</span>
+                </Link>
+              </div>
+            </article>
+          ))}
+        </div>
+      </section>
+
+      <section id="playground" className="neo-playground">
+        <div className="neo-section-intro neo-section-intro-compact" data-reveal>
+          <p className="neo-section-index">02 / In motion</p>
+          <h2>Details that make<br /><em>the work feel alive.</em></h2>
+          <p>A continuously moving edit of prototypes, interface moments, and visual experiments.</p>
+        </div>
+
+        <div className="neo-reel-window" aria-label="Project motion reel">
+          <div className="neo-reel-track">
+            {[...reelItems, ...reelItems].map((item, index) => {
+              const duplicate = index >= reelItems.length
+              const media = (
                 <>
-                  <span className="showcase-media">
-                    {slide.art ? (
-                      <ShowcaseArt kind={slide.art} />
-                    ) : slide.video ? (
+                  <span className="neo-reel-media">
+                    {item.video ? (
                       <ViewportVideo
-                        sources={[{ src: slide.video, type: 'video/mp4' }]}
-                        ariaLabel={slide.alt}
+                        sources={[{ src: item.video, type: 'video/mp4' }]}
+                        ariaLabel={item.alt}
+                        startAt={item.startAt}
                       />
-                    ) : slide.image ? (
-                      <Image
-                        src={slide.image}
-                        alt={slide.alt}
-                        fill
-                        sizes="(max-width: 760px) 82vw, 534px"
-                        style={{
-                          objectPosition: slide.position ?? 'center',
-                          objectFit: slide.fit ?? 'cover',
-                        }}
-                      />
+                    ) : item.image ? (
+                      <Image src={item.image} alt={item.alt} fill sizes="420px" />
                     ) : null}
                   </span>
+                  <span className="neo-reel-label">{item.title}</span>
                 </>
               )
 
-              return slide.href ? (
+              return item.href ? (
                 <Link
-                  key={`${slide.title}-${index}`}
-                  href={slide.href}
-                  className={cardClassName}
-                  aria-hidden={isDuplicate}
-                  aria-label={`View ${slide.title}`}
-                  tabIndex={isDuplicate ? -1 : undefined}
-                  onClick={(event) => beginCaseStudyTransition(event, slide.href!)}
+                  key={`${item.title}-${index}`}
+                  href={item.href}
+                  className={`neo-reel-card reel-${item.format} reel-${item.tone}`}
+                  tabIndex={duplicate ? -1 : undefined}
+                  aria-hidden={duplicate}
+                  onClick={(event) => beginCaseStudyTransition(event, item.href!)}
                 >
-                  {cardContents}
+                  {media}
                 </Link>
               ) : (
-                <div
-                  key={`${slide.title}-${index}`}
-                  className={cardClassName}
-                  aria-hidden="true"
-                >
-                  {cardContents}
+                <div key={`${item.title}-${index}`} className={`neo-reel-card reel-${item.format} reel-${item.tone}`} aria-hidden="true">
+                  {media}
                 </div>
               )
             })}
@@ -484,222 +381,66 @@ export default function HousePortfolio() {
         </div>
       </section>
 
-      <section className="mini-work">
-        <div className="mini-work-heading">
-          <p className="dani-kicker">Selected projects</p>
-          <h2>Tiny fraction of my work.</h2>
-          <p>
-            A quick pass through product concepts, research-heavy flows, AI tools, enterprise systems, and playful visual experiments.
-          </p>
+      <section className="neo-capabilities" data-reveal>
+        <div>
+          <p className="neo-section-index">03 / Capabilities</p>
+          <h2>From first question<br />to <em>final polish.</em></h2>
         </div>
-
-        <div className="case-study-stack">
-          {projects.map((project) => (
-            <Link
-              key={project.title}
-              href={project.href}
-              className={`case-study-row ${project.tone}`}
-              onClick={(event) => beginCaseStudyTransition(event, project.href)}
-            >
-              <div className="case-side-tiles" aria-hidden="true">
-                <div className="case-flower-tile">
-                  <div className="case-mini-flower">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <strong />
-                  </div>
-                </div>
-                <div className="case-blank-tile">
-                  <div className="case-mini-flower case-mini-flower-inverse">
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <span />
-                    <strong />
-                  </div>
-                </div>
-              </div>
-              <div className="case-feature-card">
-                <div className="case-preview">
-                  <div className="case-pattern" />
-                  <div className={`case-image main-shot${project.previewVideo || project.singlePhone ? ' single-phone-shot' : ''}`}>
-                    {project.previewVideo ? (
-                      <ViewportVideo
-                        sources={[{ src: project.previewVideo, type: 'video/webm' }]}
-                        poster={project.image}
-                        ariaLabel={project.alt}
-                        className="single-phone-preview-video"
-                      />
-                    ) : (
-                      <Image
-                        src={project.image}
-                        alt={project.alt}
-                        fill
-                        sizes="(max-width: 900px) 72vw, 780px"
-                        className="case-media-contain"
-                      />
-                    )}
-                  </div>
-                  {project.secondaryImage && (
-                    <div className="case-image mini-shot">
-                      <Image
-                        src={project.secondaryImage}
-                        alt={project.secondaryAlt}
-                        fill
-                        sizes="(max-width: 900px) 60vw, 340px"
-                        className="case-media-contain"
-                      />
-                    </div>
-                  )}
-                  <div className="case-meta">
-                    <strong>{project.title}</strong>
-                    <span>{project.category}</span>
-                  </div>
-                </div>
-
-                <div className="case-description-panel">
-                  <p>{project.description}</p>
-                  <div>
-                    <strong>{project.title}</strong>
-                    <span>{project.category}</span>
-                  </div>
-                  <i aria-hidden="true">»</i>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="dani-support">
-        <div className="support-heading">
-          <h2>I’ve got your back with...</h2>
-          <p className="home-single-line">Digital aesthetics that engage and emotionally connect with your users</p>
-        </div>
-
-        <div className="support-tab-stage">
-          <div className="support-tab-interaction" aria-label="Design capability preview cards" tabIndex={0}>
-            {supportTabs.map((tab, index) => (
-              <div key={`${tab.image}-${index}`} className={`support-tab ${tab.tone}`}>
-                <Image src={tab.image} alt={tab.alt} fill sizes="160px" className="object-cover" />
-              </div>
-            ))}
-            <div className="support-note" aria-hidden="true">
-              Let’s make it<br />resonate.
-            </div>
-          </div>
-        </div>
-
-        <div className="support-list-grid">
-          {supportColumns.map((column, index) => (
-            <div key={index} className="support-list-column">
-              {column.map((item) => (
-                <span key={item}>{item}</span>
-              ))}
-            </div>
-          ))}
-        </div>
-      </section>
-
-      <section id="about" className="behind-pixels">
-        <div className="behind-heading">
-          <h2>A little about me</h2>
-          <p className="home-single-line">The perspective and small things that shape my work.</p>
-        </div>
-
-        <div className="pixel-story first">
-          <div className="photo-board">
-            <div className="grid-paper" />
-            <div className="travel-line" />
-            <figure className="polaroid p-one">
-              <Image src="/about-grad.jpg" alt="Anusha celebrating her UC Davis graduation" fill sizes="180px" className="object-cover" />
-              <span className="photo-clip" aria-hidden="true" />
-            </figure>
-            <figure className="polaroid p-two">
-              <Image src="/about-nature.jpg" alt="A quiet set of swings surrounded by greenery" fill sizes="180px" className="object-cover" />
-              <span className="photo-clip" aria-hidden="true" />
-            </figure>
-            <figure className="polaroid p-three">
-              <Image src="/about-sunset.jpg" alt="Sunset over the harbor" fill sizes="180px" className="object-cover" />
-              <span className="photo-clip" aria-hidden="true" />
-            </figure>
-          </div>
-          <div className="pixel-copy">
-            <p>
-              I’m a product designer drawn to clear systems, playful details, and ideas that make people feel a little more capable.
-            </p>
-            <p>
-              My work lives around AI, complex workflows, and the tiny interaction choices that make digital products feel clear and trustworthy.
-            </p>
-          </div>
-        </div>
-
-        <div className="pixel-divider" />
-
-        <div className="pixel-story second">
-          <div className="pixel-copy">
-            <p>
-              I bring research, visual design, prototyping, and storytelling together to make complex things feel easy without making them boring.
-            </p>
-          </div>
-          <div className="photo-board small-board">
-            <div className="grid-paper" />
-            <div className="travel-line looping" />
-            <figure className="polaroid p-four">
-              <Image src="/about-friends-grad-1.jpg" alt="Anusha celebrating graduation with friends" fill sizes="170px" className="object-cover" />
-              <span className="photo-clip" aria-hidden="true" />
-            </figure>
-            <figure className="polaroid p-six">
-              <Image src="/about-matcha.jpg" alt="A table full of matcha drinks" fill sizes="170px" className="object-cover" />
-              <span className="photo-clip" aria-hidden="true" />
-            </figure>
-            <figure className="polaroid p-seven">
-              <Image src="/about-food.jpg" alt="Dinner shared around the table" fill sizes="170px" className="object-cover" />
-              <span className="photo-clip" aria-hidden="true" />
-            </figure>
-          </div>
-        </div>
-      </section>
-
-      <footer className="dani-footer">
-        <a href="mailto:arama@ucdavis.edu" className="footer-contact-card" aria-label="Email Anusha">
-          <div className="footer-flower footer-flower-left" aria-hidden="true">
-            {Array.from({ length: 6 }).map((_, index) => <span key={index} />)}
-            <strong />
-          </div>
-          <div className="footer-flower footer-flower-right" aria-hidden="true">
-            {Array.from({ length: 6 }).map((_, index) => <span key={index} />)}
-            <strong />
-          </div>
-          <p>Think we vibe?</p>
-          <h2>Get in touch</h2>
-        </a>
-        <div className="footer-link-row" aria-label="Footer links">
-          <a href="#work">works</a>
-          <a href="mailto:arama@ucdavis.edu">email</a>
-          <a href="https://www.linkedin.com/" target="_blank" rel="noreferrer">linkedIn</a>
-        </div>
-      </footer>
-
-      <section className="flower-finale" aria-label="A closing design thought">
-        <p>Good design makes complex things feel naturally clear.</p>
-        <div className="flower-finale-grid" aria-hidden="true">
-          {Array.from({ length: 50 }, (_, flowerIndex) => (
-            <span className="flower-finale-mark" key={flowerIndex}>
-              {Array.from({ length: 6 }, (_, petalIndex) => <i key={petalIndex} />)}
-              <strong />
+        <div className="neo-capability-list">
+          {capabilities.map((capability, index) => (
+            <span key={capability}>
+              <small>{String(index + 1).padStart(2, '0')}</small>
+              {capability}
             </span>
           ))}
         </div>
       </section>
 
-      <a className="floating-chat" href="mailto:arama@ucdavis.edu" aria-label="Email Anusha">
-        <span />
-      </a>
+      <section id="about" className="neo-about">
+        <div className="neo-about-media" data-reveal>
+          <div className="neo-about-orbit" aria-hidden="true" />
+          <figure className="neo-about-photo about-photo-main">
+            <Image src="/anusha-photo.jpg" alt="Anusha Ramachandran" fill sizes="(max-width: 800px) 72vw, 34vw" className="object-cover" />
+          </figure>
+          <figure className="neo-about-photo about-photo-detail">
+            <Image src="/about-grad.jpg" alt="Anusha celebrating her UC Davis graduation" fill sizes="220px" className="object-cover" />
+          </figure>
+          <Flower className="about-bloom" />
+        </div>
+
+        <div className="neo-about-copy" data-reveal>
+          <p className="neo-section-index">04 / About</p>
+          <h2>Curious by nature,<br /><em>precise by practice.</em></h2>
+          <p>
+            I’m a product designer drawn to clear systems, playful details, and ideas that make people feel more capable.
+          </p>
+          <p>
+            I bring research, visual design, prototyping, and storytelling together to make complex things feel easy without making them boring.
+          </p>
+          <a href="/Anusha_Ramachandran_Resume.pdf" target="_blank" rel="noopener noreferrer" className="neo-text-link">
+            View résumé <span aria-hidden="true">↗</span>
+          </a>
+        </div>
+      </section>
+
+      <footer id="contact" className="neo-contact">
+        <div className="neo-contact-glow" aria-hidden="true" />
+        <Flower className="contact-bloom bloom-one" />
+        <Flower className="contact-bloom bloom-two" />
+        <p className="neo-section-index">05 / Say hello</p>
+        <p className="neo-contact-note">Have a complex product that needs to feel simple?</p>
+        <a href="mailto:arama@ucdavis.edu" className="neo-contact-link">
+          Let’s make it<br /><em>resonate.</em>
+        </a>
+        <div className="neo-footer-row">
+          <span>© {new Date().getFullYear()} Anusha Ramachandran</span>
+          <div>
+            <a href="mailto:arama@ucdavis.edu">Email</a>
+            <a href="https://www.linkedin.com/in/anusha-ramachandran-45882724a" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+            <a href="#top">Back to top ↑</a>
+          </div>
+        </div>
+      </footer>
     </main>
   )
 }
