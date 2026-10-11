@@ -139,7 +139,81 @@
   min-height: 100svh;
   align-items: flex-end;
   padding: clamp(150px, 18vh, 210px) clamp(24px, 6.4vw, 104px) clamp(70px, 9vh, 104px);
+  background:
+    linear-gradient(135deg, rgba(255, 255, 255, .24), transparent 42%),
+    linear-gradient(160deg, #f1f2ef 0%, #eeecef 53%, #e9ebf2 100%);
   isolation: isolate;
+}
+
+.neo-hero::before,
+.neo-hero::after {
+  position: absolute;
+  z-index: -3;
+  content: '';
+  pointer-events: none;
+}
+
+.neo-hero::before {
+  inset: -28%;
+  background:
+    conic-gradient(
+      from 205deg at 66% 47%,
+      transparent 0deg 32deg,
+      rgba(255, 77, 61, .28) 76deg,
+      rgba(255, 150, 192, .26) 128deg,
+      transparent 172deg 220deg,
+      rgba(75, 82, 238, .34) 270deg,
+      transparent 326deg
+    );
+  filter: blur(44px) saturate(1.35);
+  transform-origin: 66% 47%;
+  animation: neoMeshOrbit 19s cubic-bezier(.45, 0, .25, 1) infinite alternate;
+}
+
+.neo-hero::after {
+  inset: 0;
+  background:
+    radial-gradient(circle at 77% 21%, rgba(255, 255, 255, .48) 0 6%, transparent 27%),
+    radial-gradient(circle at 61% 73%, rgba(255, 255, 255, .3) 0 4%, transparent 24%);
+  mix-blend-mode: soft-light;
+  animation: neoLightSweep 10s ease-in-out infinite alternate;
+}
+
+.neo-hero-mesh {
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.neo-hero-mesh::before,
+.neo-hero-mesh::after {
+  position: absolute;
+  content: '';
+  border-radius: 999px;
+  opacity: .7;
+  filter: blur(22px);
+}
+
+.neo-hero-mesh::before {
+  top: 9%;
+  right: -7%;
+  width: min(58vw, 900px);
+  height: clamp(90px, 12vw, 180px);
+  background: linear-gradient(90deg, transparent, rgba(255, 88, 65, .5), rgba(255, 174, 204, .48));
+  transform: rotate(-18deg);
+  animation: neoRibbonOne 13s ease-in-out infinite alternate;
+}
+
+.neo-hero-mesh::after {
+  right: 13%;
+  bottom: 8%;
+  width: min(52vw, 820px);
+  height: clamp(100px, 14vw, 210px);
+  background: linear-gradient(90deg, rgba(77, 84, 232, .48), rgba(255, 104, 151, .35), transparent);
+  transform: rotate(14deg);
+  animation: neoRibbonTwo 16s ease-in-out -4s infinite alternate;
 }
 
 .neo-hero-copy {
@@ -250,34 +324,47 @@
   border-radius: 50%;
   filter: blur(74px);
   opacity: .74;
-  animation: neoDrift 11s ease-in-out infinite alternate;
+}
+
+.neo-hero-glow {
+  filter: blur(66px) saturate(1.18);
+  opacity: .8;
 }
 
 .glow-coral {
-  top: 10%;
-  right: 7%;
-  width: min(44vw, 660px);
+  top: 4%;
+  right: 2%;
+  width: min(48vw, 720px);
   aspect-ratio: 1.25;
-  background: rgba(255, 92, 73, .72);
-  transform: rotate(22deg);
+  background: rgba(255, 77, 61, .84);
+  animation: neoCoralDrift 12s cubic-bezier(.45, 0, .25, 1) infinite alternate;
 }
 
 .glow-cobalt {
-  right: 30%;
-  bottom: 8%;
-  width: min(34vw, 520px);
+  right: 24%;
+  bottom: -2%;
+  width: min(38vw, 580px);
   aspect-ratio: 1;
-  background: rgba(77, 84, 232, .66);
-  animation-delay: -3s;
+  background: rgba(70, 78, 235, .78);
+  animation: neoCobaltDrift 15s cubic-bezier(.45, 0, .25, 1) -5s infinite alternate;
 }
 
 .glow-blush {
-  top: 19%;
-  left: 46%;
-  width: min(24vw, 380px);
+  top: 12%;
+  left: 44%;
+  width: min(30vw, 460px);
   aspect-ratio: 1;
-  background: rgba(255, 177, 202, .82);
-  animation-delay: -7s;
+  background: rgba(255, 151, 190, .88);
+  animation: neoBlushDrift 13s cubic-bezier(.45, 0, .25, 1) -7s infinite alternate;
+}
+
+.glow-gold {
+  top: 35%;
+  right: 14%;
+  width: min(20vw, 310px);
+  aspect-ratio: 1;
+  background: rgba(255, 205, 74, .72);
+  animation: neoGoldDrift 10s cubic-bezier(.45, 0, .25, 1) -2s infinite alternate;
 }
 
 .neo-flower {
@@ -317,34 +404,6 @@
   border-radius: 50%;
   background: var(--center);
   transform: translate(-50%, -50%) rotate(8deg);
-}
-
-.hero-bloom {
-  position: absolute;
-  z-index: 2;
-  transition: transform .7s cubic-bezier(.2, .7, .2, 1);
-}
-
-.hero-bloom:hover {
-  transform: rotate(180deg) scale(1.08);
-}
-
-.hero-bloom.bloom-one {
-  --petal: #ff6f5d;
-  --center: #f5d66a;
-  top: 22%;
-  right: 10%;
-  width: clamp(72px, 8vw, 124px);
-  transform: rotate(-11deg);
-}
-
-.hero-bloom.bloom-two {
-  --petal: #6368ea;
-  --center: #ffb1ca;
-  top: 52%;
-  right: 35%;
-  width: clamp(46px, 5vw, 76px);
-  transform: rotate(15deg);
 }
 
 .neo-projects,
@@ -787,6 +846,7 @@
   width: min(54vw, 780px);
   aspect-ratio: 1;
   background: rgba(255, 190, 206, .95);
+  animation: neoDrift 11s ease-in-out infinite alternate;
 }
 
 .neo-contact-note {
@@ -902,6 +962,46 @@
   to { translate: 5% 4%; scale: 1.06; }
 }
 
+@keyframes neoMeshOrbit {
+  from { transform: rotate(-7deg) scale(.93) translate3d(-2%, -1%, 0); }
+  to { transform: rotate(11deg) scale(1.08) translate3d(3%, 2%, 0); }
+}
+
+@keyframes neoLightSweep {
+  from { opacity: .52; transform: translate3d(-2%, 1%, 0) scale(1); }
+  to { opacity: .9; transform: translate3d(3%, -2%, 0) scale(1.08); }
+}
+
+@keyframes neoRibbonOne {
+  from { transform: translate3d(-8%, -6%, 0) rotate(-22deg) scale(.9); }
+  to { transform: translate3d(5%, 12%, 0) rotate(-10deg) scale(1.12); }
+}
+
+@keyframes neoRibbonTwo {
+  from { transform: translate3d(7%, 7%, 0) rotate(18deg) scale(.92); }
+  to { transform: translate3d(-10%, -8%, 0) rotate(8deg) scale(1.1); }
+}
+
+@keyframes neoCoralDrift {
+  from { transform: translate3d(6%, -5%, 0) rotate(12deg) scale(.92); }
+  to { transform: translate3d(-11%, 13%, 0) rotate(-8deg) scale(1.12); }
+}
+
+@keyframes neoCobaltDrift {
+  from { transform: translate3d(-9%, 8%, 0) scale(.9); }
+  to { transform: translate3d(13%, -10%, 0) scale(1.12); }
+}
+
+@keyframes neoBlushDrift {
+  from { transform: translate3d(-11%, -5%, 0) scale(1.08); }
+  to { transform: translate3d(15%, 12%, 0) scale(.9); }
+}
+
+@keyframes neoGoldDrift {
+  from { transform: translate3d(14%, -9%, 0) scale(.86); }
+  to { transform: translate3d(-18%, 17%, 0) scale(1.17); }
+}
+
 @keyframes neoSlowSpin {
   to { transform: rotate(369deg); }
 }
@@ -994,9 +1094,6 @@
     font-size: 1rem;
   }
 
-  .hero-bloom.bloom-one { top: 18%; right: 6%; opacity: .86; }
-  .hero-bloom.bloom-two { right: 14%; bottom: 12%; top: auto; }
-
   .neo-projects,
   .neo-playground,
   .neo-capabilities,
@@ -1083,6 +1180,10 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .neo-hero::before,
+  .neo-hero::after,
+  .neo-hero-mesh::before,
+  .neo-hero-mesh::after,
   .neo-hero-glow,
   .neo-contact-glow,
   .neo-reel-track,

@@ -246,12 +246,12 @@ export default function HousePortfolio() {
         </a>
       </header>
 
-      <section id="top" className="neo-hero">
+      <section id="top" className="neo-hero" data-hero="aurora-v2">
+        <div className="neo-hero-mesh" aria-hidden="true" />
         <div className="neo-hero-glow glow-coral" aria-hidden="true" />
         <div className="neo-hero-glow glow-cobalt" aria-hidden="true" />
         <div className="neo-hero-glow glow-blush" aria-hidden="true" />
-        <Flower className="hero-bloom bloom-one" />
-        <Flower className="hero-bloom bloom-two" />
+        <div className="neo-hero-glow glow-gold" aria-hidden="true" />
 
         <div className="neo-hero-copy">
           <p className="neo-eyebrow">Hello, I’m Anusha</p>
