@@ -40,9 +40,8 @@
   width: 100%;
   min-height: 84px;
   padding: 14px clamp(24px, 6.4vw, 104px);
-  border-bottom: 1px solid rgba(17, 17, 15, .08);
-  background: rgba(237, 238, 236, .8);
-  backdrop-filter: blur(18px);
+  border-bottom: 0;
+  background: transparent;
 }
 
 .neo-brand {
